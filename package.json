@@ -1,7 +1,9 @@
 {
-  "name": "hashlips_art_engine",
-  "version": "1.1.1",
-  "description": "HashLips Art Engine is a tool used to create multiple different instances of artworks based on provided layers.",
+  "name": "@rhapsodylabs/layer-generator",
+  "author": "Rhapsody Labs",
+  "license": "MIT",
+  "version": "1.0.0",
+  "description": "GM, WAGMI",
   "main": "index.js",
   "bin": "index.js",
   "pkg": {
@@ -12,19 +14,25 @@
     ]
   },
   "scripts": {
-    "build": "node index.js",
-    "generate": "node index.js",
+    "prebuild": "rimraf ./build && tsc",
+    "build": "node build/index.js",
+    "generate": "node index.ts",
     "rarity": "node utils/rarity.js",
     "preview": "node utils/preview.js",
     "pixelate": "node utils/pixelate.js",
     "update_info": "node utils/update_info.js",
     "preview_gif": "node utils/preview_gif.js"
   },
-  "author": "Daniel Eugene Botha (HashLips)",
-  "license": "MIT",
   "dependencies": {
     "canvas": "^2.8.0",
+    "canvas-sketch-util": "^1.10.0",
     "gif-encoder-2": "^1.0.5",
     "sha1": "^1.1.1"
+  },
+  "devDependencies": {
+    "@types/node": "^16.11.10",
+    "rimraf": "^3.0.2",
+    "ts-node": "^10.4.0",
+    "typescript": "^4.5.2"
   }
 }

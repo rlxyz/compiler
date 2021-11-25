@@ -1,7 +1,7 @@
 const basePath = process.cwd();
 const { MODE } = require(`${basePath}/constants/blend_mode.js`);
 const { NETWORK } = require(`${basePath}/constants/network.js`);
-
+const random = require('canvas-sketch-util/random');
 const network = NETWORK.eth;
 
 // General metadata for Ethereum
@@ -21,16 +21,39 @@ const solanaMetadata = {
   ],
 };
 
+// todo: remove and replace
 const layerType = {
   NORMAL: "NORMAL",
   EXCLUSION: "EXCLUSION",
   COMBINATION: "COMBINATION"
 }
 
-// If you have selected Solana then the collection starts from 0 automatically
+random.setSeed(1)
+
+const layerCount = 15;
+// const rarity = (new Set((Array.from(Array(layerCount), (_, i) => Array.from(Array(10), () => random.range(-1, 1))))))
+
+// const rarityCoefficient = {
+//   0: Array.from(Array(layerCount), () => random.range(-1, 1)),
+//   1: Array.from(Array(layerCount), () => random.range(-1, 1)),
+//   2: Array.from(Array(layerCount), () => random.range(-1, 1)),
+//   3: Array.from(Array(layerCount), () => random.range(-1, 1)),
+//   4: Array.from(Array(layerCount), () => random.range(-1, 1)),
+//   5: Array.from(Array(layerCount), () => random.range(-1, 1)),
+//   6: Array.from(Array(layerCount), () => random.range(-1, 1)),
+//   7: Array.from(Array(layerCount), () => random.range(-1, 1)),
+//   8: Array.from(Array(layerCount), () => random.range(-1, 1)),
+//   9: Array.from(Array(layerCount), () => random.range(-1, 1)),
+//   10: Array.from(Array(layerCount), () => random.range(-1, 1)),
+//   11: Array.from(Array(layerCount), () => random.range(-1, 1)),
+//   12: Array.from(Array(layerCount), () => random.range(-1, 1)),
+//   13: Array.from(Array(layerCount), () => random.range(-1, 1)),
+//   14: Array.from(Array(layerCount), () => random.range(-1, 1)),
+// }
+
 const layerConfigurations = [
   {
-    growEditionSizeTo: 2,
+    growEditionSizeTo: 1000,
     layersOrder: [
       { name: "sky" },
       { name: "bottom_left" },
@@ -74,8 +97,7 @@ const layerConfigurations = [
             "frozen": ["snowy town.png", "winter.png"]
           },
         }
-      }, 
-      // { name: "special_bottom" },
+      },
     ],
   },
 ];
@@ -163,4 +185,5 @@ module.exports = {
   solanaMetadata,
   gif,
   preview_gif,
+  // rarityCoefficient,
 };

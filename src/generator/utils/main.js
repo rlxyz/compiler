@@ -238,8 +238,6 @@ const drawElement = (_renderObject, _index, _layersLen) => {
       format.width,
       format.height
     );
-
-  addAttributes(_renderObject);
 };
 
 const constructLayerToDna = (_dna = [], _layers = []) => {
@@ -356,7 +354,6 @@ const createDna = (_layers) => {
     }
     return;
   });
-  console.log(randNum)
   return randNum;
 };
 
@@ -427,7 +424,7 @@ const startCreating = async () => {
           // console.log(layer)
           loadedElements.push(loadLayerImg(layer));
         });
-
+        
         await Promise.all(loadedElements).then((renderObjectArray) => {
           debugLogs ? console.log("Clearing canvas") : null;
           ctx.clearRect(0, 0, format.width, format.height);
@@ -446,12 +443,13 @@ const startCreating = async () => {
             drawBackground();
           }
           renderObjectArray.forEach((renderObject, index) => {
-            // console.log(renderObject)
+            console.log(renderObject)
             drawElement(
               renderObject,
               index,
               layerConfigurations[layerConfigIndex].layersOrder.length
             );
+            addAttributes(renderObject);
             if (gif.export) {
               hashlipsGiffer.add();
             }

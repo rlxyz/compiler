@@ -1,0 +1,9 @@
+const LAYER_CONFIG = {
+  NORMAL: 'NORMAL',
+  EXCLUSION: 'EXCLUSION',
+  COMBINATION: 'COMBINATION',
+};
+
+module.exports = {
+  LAYER_CONFIG,
+};
