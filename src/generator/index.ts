@@ -20,8 +20,6 @@ class Generator {
     ) {
         this.config = config
         this.layers = new Layers(layers, this.config.build.basePath, this.config.build.rarityDelimiter)
-
-        console.log(this.layers.get(0).elements)
     }
 
     // setup() {

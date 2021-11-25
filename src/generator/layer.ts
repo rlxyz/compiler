@@ -15,7 +15,7 @@ class Layers {
 
     constructor(configs: LayerConfig[], basePath: string, rarityDelimiter: string) {
         this.layerPath = `${basePath}/layers`
-        this.layers = configs.map((config: LayerConfig) => new Layer(config, basePath, rarityDelimiter))
+        this.layers = configs.map((config: LayerConfig) => new Layer(config, this.layerPath, rarityDelimiter))
     }
 
     get(index: number) {
@@ -39,7 +39,7 @@ class Layer {
         }
 
         this.name = config.name
-        this.elements = this.getLayerElements(layerPath, rarityDelimiter)
+        this.elements = this.getLayerElements(`${layerPath}/${this.name}/`, rarityDelimiter)
 
         if (config.options?.type != undefined) {
             this.type = config.options.type
