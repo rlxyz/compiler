@@ -52,6 +52,7 @@ build/Release
 build/
 dist/
 images/
+layers/
 node_modules/
 jspm_packages/
 

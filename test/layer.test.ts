@@ -25,7 +25,6 @@ const layerConfigC = {
 describe("Layer", () => {
     test('sets layer details correctly', () => {
         const layers = new Layers([layerConfigA], basePath)
-
         expect(layers.get(0).name).toBe(layerConfigA.name);
         expect(layers.get(0).iterations).toBe(1);
         expect(layers.get(0).occuranceRate).toBe(1);

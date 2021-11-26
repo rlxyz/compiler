@@ -54,7 +54,6 @@ const layerConfig: LayerConfig[] = [
         }
     },
 ]
-
 const buildConfig: BuildConfig = {
     basePath: basePath,
     invocations: 1,
