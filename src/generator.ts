@@ -4,7 +4,7 @@ import {
     ImageFormatConfig,
     LayerConfig,
     BuildConfig
-} from "./types"
+} from "./utils/types"
 import fs from "fs"
 
 export type GeneratorConfig = {
@@ -44,10 +44,7 @@ class Generator {
             throw new Error("there aren't any layers specified")
         }
 
-        const canvas = createCanvas(this.config.format.width, this.config.format.height);
-
         this.layers.createRandomImages(
-            canvas,
             this.buildPath,
             this.config.format.width,
             this.config.format.height,

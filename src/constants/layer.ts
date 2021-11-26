@@ -1,9 +1,5 @@
-const LAYER_CONFIG = {
+export const LAYER_TYPES = {
   NORMAL: 'NORMAL',
   EXCLUSION: 'EXCLUSION',
   COMBINATION: 'COMBINATION',
-};
-
-module.exports = {
-  LAYER_CONFIG,
 };

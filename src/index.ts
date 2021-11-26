@@ -1,6 +1,6 @@
 // const basePath = process.cwd();
 // const { startCreating, buildSetup } = require(`${basePath}/src/main.js`);
-import { Generator } from "./generator/index"
+import { Generator } from "./generator"
 import { generatorConfig, layerConfig } from "./config";
 
 (() => {

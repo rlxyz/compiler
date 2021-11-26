@@ -1,5 +1,5 @@
 import { GeneratorConfig } from "./generator";
-import { BuildConfig, ImageFormatConfig, LayerConfig } from "./generator/types";
+import { BuildConfig, ImageFormatConfig, LayerConfig } from "./utils/types";
 
 const basePath = process.cwd();
 

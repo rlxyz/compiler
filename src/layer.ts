@@ -1,6 +1,8 @@
-import { LayerConfig } from "./types";
+import { LayerConfig } from "./utils/types";
 import fs from "fs";
-import { createCanvas, Image, loadImage as li } from "canvas";
+import { clearCanvas, createCanvas, drawImage, saveImage } from "./utils/canvas"
+import { LAYER_TYPES } from "./constants/layer";
+import { Gene, GeneSequence } from "./gene";
 
 type LayerElement = {
     id: number,
@@ -8,34 +10,6 @@ type LayerElement = {
     filename: string,
     path: string,
     weight: number
-}
-
-type GeneSequence = {
-    layerIndex: number,
-    elementIndex: number
-    element: any,
-}
-
-class Gene {
-    sequences: GeneSequence[]
-
-    constructor(sequences: GeneSequence[]) {
-        this.sequences = sequences
-    }
-
-    string = () => {
-        return this.sequences
-    }
-
-    loadImages = (layers: Layer[]): Promise<{ layer: Layer, image: Image }>[] => {
-        const loadedElements: Promise<{ layer: Layer, image: Image }>[] = this.sequences.map((sequence) => {
-            return new Promise(async (resolve) => {
-                const image: Image = await li(`${sequence.element.path}`);
-                resolve({ layer: layers[sequence.layerIndex], image: image });
-            });
-        })
-        return loadedElements
-    }
 }
 
 class Layers {
@@ -47,13 +21,13 @@ class Layers {
     constructor(
         configs: LayerConfig[],
         basePath: string,
-        rarityDelimiter: string,
-        geneDelimiter: string
+        rarityDelimiter?: string,
+        geneDelimiter?: string
     ) {
         this.layerPath = `${basePath}/layers`
-        this.rarityDelimiter = rarityDelimiter
-        this.geneDelimiter = geneDelimiter
-        this.layers = configs.map((config: LayerConfig) => new Layer(config, this.layerPath, rarityDelimiter))
+        this.rarityDelimiter = rarityDelimiter || "#"
+        this.geneDelimiter = geneDelimiter || "-"
+        this.layers = configs.map((config: LayerConfig) => new Layer(config, this.layerPath, this.rarityDelimiter))
     }
 
     get(index: number) {
@@ -65,72 +39,28 @@ class Layers {
     }
 
     // todo: add opacity + blend
-    drawImage = (
-        ctx: any,
-        width: number,
-        height: number,
-        renderObject: any,
-    ) => {
-        // ctx.globalAlpha = renderObject.layer.opacity || 1;
-        // ctx.globalCompositeOperation = renderObject.layer.blend;
-        ctx.drawImage(
-            renderObject.image,
-            0,
-            0,
-            width,
-            height
-        );
-    };
-
-    saveImage = (canvas: any, basePath: string, index: number) => {
-        fs.writeFileSync(
-            `${basePath}/images/${index}.png`,
-            canvas.toBuffer("image/png")
-        );
-    };
-
     // todo: gene already exists
     // todo: add attributes/metadata
     // todo: restrucutre canvas object
     createRandomImages = async (
-        canvas: any,
         basePath: string,
         width: number,
         height: number,
         invocations: number
     ) => {
-        const ctx = canvas.getContext("2d");
+        const { canvas, context } = createCanvas(width, height);
         for (let i = 0; i < invocations; i++) {
             const gene: Gene = this.createGene()
             const loadedImages = gene.loadImages(this.layers)
             await Promise.all(loadedImages).then((render) => {
-                ctx.clearRect(0, 0, width, height)
-                render.forEach((object) => {
-                    this.drawImage(ctx, width, height, object)
+                clearCanvas(context, width, height)
+                render.forEach(object => {
+                    drawImage(context, object.image, width, height)
                 })
-                this.saveImage(canvas, basePath, i)
-            })
-            // let results: Gene = this.createDnaFromGene(raw)
+                saveImage(canvas, `${basePath}/images/${i}.png`)
+            });
         }
     }
-
-    // createDnaFromGene(raw: string[] = []): Gene {
-    //     let gene: Gene = {
-    //         raw: raw,
-    //         sequence: []
-    //     }
-    //     raw.forEach((layer) => {
-    //         const [layerType, layerItem] = layer.split("-")
-    //         const layerIndex = Number(layerType.replace("L", ""))
-    //         gene.sequence.push({
-    //             name: this.layers[layerIndex].name,
-    //             element: this.layers[layerIndex].elements.find(
-    //                 (e) => e.id == cleanDna(layerItem)
-    //             )
-    //         })
-    //     });
-    //     return gene;
-    // }
 
     createGene(): Gene {
         let sequences: GeneSequence[] = [];
@@ -209,7 +139,7 @@ class Layers {
     }
 }
 
-class Layer {
+export class Layer {
     name: string;
     elements: LayerElement[];
     iterations: number;
@@ -219,6 +149,7 @@ class Layer {
     exclude?: any;
 
     // todo: fix rarityDelimter being passed multiple times
+    // todo: fix type name checking conmbination and exclude properties
     constructor(config: LayerConfig, layerPath: string, rarityDelimiter: string) {
         if (!config.name || config.name.length == 0) {
             throw new Error("layer name doesn't exists")
@@ -228,10 +159,7 @@ class Layer {
         this.elements = this.getLayerElements(`${layerPath}/${this.name}/`, rarityDelimiter)
         this.iterations = config.options?.iterations || 1
         this.occuranceRate = config.options?.occuranceRate || 1
-
-        if (config.options?.type != undefined) {
-            this.type = config.options.type
-        }
+        this.type = config.options?.type || LAYER_TYPES.NORMAL
 
         if (config.options?.combination != undefined) {
             this.combination = config.options.combination
