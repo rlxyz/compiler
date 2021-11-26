@@ -1,9 +1,11 @@
+import { createCanvas } from "canvas";
 import { Layers } from "./layer";
 import {
     ImageFormatConfig,
     LayerConfig,
     BuildConfig
 } from "./types"
+import fs from "fs"
 
 export type GeneratorConfig = {
     format: ImageFormatConfig;
@@ -13,35 +15,44 @@ export type GeneratorConfig = {
 class Generator {
     config: GeneratorConfig
     layers: Layers;
+    buildPath: string;
 
     constructor(
         config: GeneratorConfig,
         layers: LayerConfig[],
     ) {
         this.config = config
-        this.layers = new Layers(layers, this.config.build.basePath, this.config.build.rarityDelimiter)
+        this.buildPath = `${config.build.basePath}/build/data`
+        this.layers = new Layers(
+            layers,
+            config.build.basePath,
+            config.build.rarityDelimiter,
+            config.build.geneDelimiter
+        )
+        this.setup()
     }
 
-    // setup() {
-    //     fs.existsSync(this.build.basePath) ? fs.rmdirSync(this.build.basePath, { recursive: true }) : null;
-    //     fs.mkdirSync(this.build.basePath);
-    //     fs.mkdirSync(`${this.build.basePath}/json`);
-    //     fs.mkdirSync(`${this.build.basePath}/images`);
-    // }
-
-    prebuild() {
-        // do checks!
+    setup() {
+        fs.existsSync(this.buildPath) ? fs.rmdirSync(this.buildPath, { recursive: true }) : null;
+        fs.mkdirSync(this.buildPath);
+        fs.mkdirSync(`${this.buildPath}/json`);
+        fs.mkdirSync(`${this.buildPath}/images`);
     }
 
-    builder() {
-        this.prebuild()
-        this.create()
-    }
+    build() {
+        if (this.layers.isEmpty()) {
+            throw new Error("there aren't any layers specified")
+        }
 
-    create() {
-        // this.layers.forEach(((layer: Layer) => {
+        const canvas = createCanvas(this.config.format.width, this.config.format.height);
 
-        // }))
+        this.layers.createRandomImages(
+            canvas,
+            this.buildPath,
+            this.config.format.width,
+            this.config.format.height,
+            this.config.build.invocations
+        )
     }
 }
 

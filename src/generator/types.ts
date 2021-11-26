@@ -7,6 +7,7 @@ type BuildConfig = {
     basePath: string,
     invocations: number,
     rarityDelimiter: string
+    geneDelimiter: string
 }
 
 type ImageFormatConfig = {

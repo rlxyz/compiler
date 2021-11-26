@@ -4,10 +4,11 @@ import { Generator } from "./generator/index"
 import { generatorConfig, layerConfig } from "./config";
 
 (() => {
-  new Generator(
+  const g = new Generator(
     generatorConfig,
     layerConfig,
   )
+  g.build()
 
   // buildSetup();
   // startCreating();

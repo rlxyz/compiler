@@ -58,7 +58,8 @@ const layerConfig: LayerConfig[] = [
 const buildConfig: BuildConfig = {
     basePath: basePath,
     invocations: 1,
-    rarityDelimiter: "#"
+    rarityDelimiter: "#",
+    geneDelimiter: "-"
 }
 
 const generatorConfig: GeneratorConfig = {
