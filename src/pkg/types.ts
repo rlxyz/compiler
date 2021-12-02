@@ -1,5 +1,5 @@
 import { Image } from "canvas";
-import { BuildConfig, ImageFormatConfig } from "./utils/types";
+import { BuildConfig, ImageFormatConfig } from "../utils/types";
 
 export type GeneratorConfig = {
     format: ImageFormatConfig;
