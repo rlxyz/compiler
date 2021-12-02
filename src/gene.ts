@@ -1,5 +1,4 @@
 import { Image, loadImage } from "canvas";
-import { Layer } from "./layer";
 
 export type GeneSequence = {
     layerIndex: number;

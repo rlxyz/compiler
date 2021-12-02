@@ -9,7 +9,4 @@ import { generatorConfig, layerConfig } from "./config";
     layerConfig,
   )
   g.build()
-
-  // buildSetup();
-  // startCreating();
 })();

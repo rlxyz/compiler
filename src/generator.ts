@@ -1,4 +1,3 @@
-import { createCanvas } from "canvas";
 import { Layers } from "./layer";
 import {
     ImageFormatConfig,
