@@ -3,8 +3,6 @@ import fs from "fs";
 import { CanvasObject, clearCanvas, createCanvas, drawImage, saveImage } from "./utils/canvas"
 import { LAYER_TYPES } from "./constants/layer";
 import { CanvasRenderObject, Gene, GeneSequence } from "./gene";
-import { layerConfigurations } from "./junk/config";
-import { config } from "process";
 
 type LayerElement = {
     id: number,
