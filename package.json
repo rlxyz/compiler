@@ -4,7 +4,7 @@
   "description": "A layer generator that takes image layers input and combines them to produce an image",
   "license": "GNU",
   "version": "1.0.0",
-  "main": "index.ts",
+  "main": "./src/index.ts",
   "pkg": {
     "assets": [
       "node_modules/**/*",

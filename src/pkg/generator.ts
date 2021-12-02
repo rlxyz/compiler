@@ -1,15 +1,7 @@
 import { Layers } from "./layer";
-import {
-    ImageFormatConfig,
-    LayerConfig,
-    BuildConfig
-} from "./utils/types"
+import { LayerConfig } from "../utils/types"
 import fs from "fs"
-
-export type GeneratorConfig = {
-    format: ImageFormatConfig;
-    build: BuildConfig;
-}
+import { GeneratorConfig } from "./types";
 
 class Generator {
     config: GeneratorConfig

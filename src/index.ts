@@ -1,12 +1,12 @@
-// const basePath = process.cwd();
-// const { startCreating, buildSetup } = require(`${basePath}/src/main.js`);
-import { Generator } from "./generator"
-import { generatorConfig, layerConfig } from "./config";
+import { Generator } from "./pkg/generator"
+import { Layers } from "./pkg/layer";
+import { GeneratorConfig, LayerElement, GeneSequence, CanvasRenderObject } from "./pkg/types"
 
-(() => {
-  const g = new Generator(
-    generatorConfig,
-    layerConfig,
-  )
-  g.build()
-})();
+export {
+  Layers,
+  Generator,
+  GeneratorConfig,
+  LayerElement,
+  GeneSequence,
+  CanvasRenderObject
+}

@@ -1,16 +1,9 @@
-import { LayerConfig } from "./utils/types";
 import fs from "fs";
-import { CanvasObject, clearCanvas, createCanvas, drawImage, saveImage } from "./utils/canvas"
-import { LAYER_TYPES } from "./constants/layer";
-import { CanvasRenderObject, Gene, GeneSequence } from "./gene";
-
-type LayerElement = {
-    id: number,
-    name: string,
-    filename: string,
-    path: string,
-    weight: number
-}
+import { LayerConfig } from "../utils/types";
+import { CanvasObject, clearCanvas, createCanvas, drawImage, saveImage } from "../utils/canvas"
+import { LAYER_TYPES } from "../constants/layer";
+import { Gene } from "./gene";
+import { CanvasRenderObject, GeneSequence, LayerElement } from "./types";
 
 const createImage = async (
     gene: Gene,

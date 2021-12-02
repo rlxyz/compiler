@@ -1,14 +1,5 @@
 import { Image, loadImage } from "canvas";
-
-export type GeneSequence = {
-    layerIndex: number;
-    elementIndex: number;
-    element: any;
-};
-
-export type CanvasRenderObject = {
-    image: Image,
-}
+import { GeneSequence, CanvasRenderObject } from "./types";
 
 export class Gene {
     sequences: GeneSequence[];
