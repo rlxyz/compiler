@@ -17,7 +17,11 @@ type ImageFormatConfig = {
 }
 
 type LayerConfig = {
-    name: string
+    name: string,
+    traits: {
+        name: string,
+        weight: number
+    }[],
     options?: {
         type?: string
         iterations?: number

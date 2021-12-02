@@ -1,4 +1,4 @@
-import { Image, loadImage as li } from "canvas";
+import { Image, loadImage } from "canvas";
 import { Layer } from "./layer";
 
 export type GeneSequence = {
@@ -6,6 +6,11 @@ export type GeneSequence = {
     elementIndex: number;
     element: any;
 };
+
+export type CanvasRenderObject = {
+    image: Image,
+}
+
 export class Gene {
     sequences: GeneSequence[];
 
@@ -17,11 +22,11 @@ export class Gene {
         return this.sequences;
     };
 
-    loadImages = (layers: Layer[]): Promise<{ layer: Layer; image: Image; }>[] => {
-        const loadedElements: Promise<{ layer: Layer; image: Image; }>[] = this.sequences.map((sequence) => {
+    loadImages = (): Promise<CanvasRenderObject>[] => {
+        const loadedElements: Promise<CanvasRenderObject>[] = this.sequences.map((sequence) => {
             return new Promise(async (resolve) => {
-                const image: Image = await li(`${sequence.element.path}`);
-                resolve({ layer: layers[sequence.layerIndex], image: image });
+                const image: Image = await loadImage(`${sequence.element.path}`);
+                resolve({ image: image });
             });
         });
         return loadedElements;

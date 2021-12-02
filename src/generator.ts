@@ -25,7 +25,9 @@ class Generator {
         this.buildPath = `${config.build.basePath}/build/data`
         this.layers = new Layers(
             layers,
-            config.build.basePath,
+            config.format.width,
+            config.format.height,
+            config.build.basePath + "/layers",
             config.build.rarityDelimiter,
             config.build.geneDelimiter
         )
@@ -46,8 +48,6 @@ class Generator {
 
         this.layers.createRandomImages(
             this.buildPath,
-            this.config.format.width,
-            this.config.format.height,
             this.config.build.invocations
         )
     }

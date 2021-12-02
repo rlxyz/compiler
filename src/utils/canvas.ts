@@ -1,7 +1,12 @@
 import { Image, Canvas, createCanvas as createCanvasImplementation, NodeCanvasRenderingContext2D } from "canvas";
 import fs from "fs";
 
-export const createCanvas = (width: number, height: number): { canvas: Canvas, context: NodeCanvasRenderingContext2D } => {
+export type CanvasObject = {
+    canvas: Canvas,
+    context: NodeCanvasRenderingContext2D
+}
+
+export const createCanvas = (width: number, height: number): CanvasObject => {
     const canvas: Canvas = createCanvasImplementation(width, height);
     const ctx = canvas.getContext("2d");
     return {

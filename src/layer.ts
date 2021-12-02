@@ -1,8 +1,10 @@
 import { LayerConfig } from "./utils/types";
 import fs from "fs";
-import { clearCanvas, createCanvas, drawImage, saveImage } from "./utils/canvas"
+import { CanvasObject, clearCanvas, createCanvas, drawImage, saveImage } from "./utils/canvas"
 import { LAYER_TYPES } from "./constants/layer";
-import { Gene, GeneSequence } from "./gene";
+import { CanvasRenderObject, Gene, GeneSequence } from "./gene";
+import { layerConfigurations } from "./junk/config";
+import { config } from "process";
 
 type LayerElement = {
     id: number,
@@ -12,19 +14,54 @@ type LayerElement = {
     weight: number
 }
 
+const createImage = async (
+    gene: Gene,
+    width: number,
+    height: number,
+    savePath: string
+) => {
+    const { canvas, context }: CanvasObject = createCanvas(width, height); // todo: not optimzed for speed
+    const loadedImages: Promise<CanvasRenderObject>[] = gene.loadImages()
+    await Promise.all(loadedImages).then((render: CanvasRenderObject[]) => {
+        clearCanvas(context, width, height)
+        render.forEach((object: CanvasRenderObject) => {
+            drawImage(context, object.image, width, height)
+        })
+        saveImage(canvas, savePath)
+    });
+}
+
 class Layers {
     layers: Layer[]
+    width: number
+    height: number
     layerPath: string
     rarityDelimiter: string
     geneDelimiter: string
 
     constructor(
         configs: LayerConfig[],
-        basePath: string,
+        width: number,
+        height: number,
+        layerPath: string,
         rarityDelimiter?: string,
-        geneDelimiter?: string
+        geneDelimiter?: string,
     ) {
-        this.layerPath = `${basePath}/layers`
+        if (configs.length == 0) {
+            throw new Error("configs failed with length 0")
+        }
+
+        if (!fs.existsSync(layerPath)) {
+            throw new Error("layerPath invalid")
+        }
+
+        if (height == 0 || width == 0) {
+            throw new Error('dimensions iinvalid')
+        }
+
+        this.layerPath = layerPath
+        this.width = width;
+        this.height = height;
         this.rarityDelimiter = rarityDelimiter || "#"
         this.geneDelimiter = geneDelimiter || "-"
         this.layers = configs.map((config: LayerConfig) => new Layer(config, this.layerPath, this.rarityDelimiter))
@@ -41,28 +78,80 @@ class Layers {
     // todo: add opacity + blend
     // todo: gene already exists
     // todo: add attributes/metadata
-    // todo: restrucutre canvas object
     createRandomImages = async (
         basePath: string,
-        width: number,
-        height: number,
         invocations: number
     ) => {
-        const { canvas, context } = createCanvas(width, height);
+        let allMetadata: any[] = []
+        let allGene: Gene[] = []
+
         for (let i = 0; i < invocations; i++) {
-            const gene: Gene = this.createGene()
-            const loadedImages = gene.loadImages(this.layers)
-            await Promise.all(loadedImages).then((render) => {
-                clearCanvas(context, width, height)
-                render.forEach(object => {
-                    drawImage(context, object.image, width, height)
-                })
-                saveImage(canvas, `${basePath}/images/${i}.png`)
-            });
+            const gene: Gene = this.createRandomGene()
+            // createImage(gene, this.width, this.height, `${basePath}/images/${i}.png`)
+            const metadata = this.createImageMetadata(gene, i)
+
+            allMetadata.push(metadata)
+            allGene.push(gene)
+        }
+
+        this.calculateRarity(allGene, invocations)
+    }
+
+    calculateRarity = (genes: Gene[], totalInvocations: number) => {
+        let layerRarity: any = {}
+        this.layers.forEach((layer, i) => {
+            layerRarity[i] = {}
+            layer.elements.forEach((element, j) => {
+                layerRarity[i][j] = {
+                    trait: element.name,
+                    weight: element.weight,
+                    occurance: 0
+                }
+            })
+        })
+
+        genes.forEach((gene: Gene) => {
+            gene.sequences.forEach((sequence: GeneSequence) => {
+                layerRarity[sequence.layerIndex][sequence.elementIndex].occurance++;
+            })
+        })
+
+        for (let layer in layerRarity) {
+            let currentLayer = this.layers[Number(layer)]
+            console.log(`Trait Type ${currentLayer.name}`)
+            for (let attribute in layerRarity[layer]) {
+                console.log(
+                    `${currentLayer.elements[Number(attribute)].name} -- `,
+                    (layerRarity[layer][attribute].occurance / totalInvocations * 100).toFixed(10) + "% out of 100%"
+                )
+            }
         }
     }
 
-    createGene(): Gene {
+    createImageMetadata = (gene: Gene, edition: number) => {
+        const collectionNamePrefix = "DreamLab"
+        const collectionBaseUri = "ipfs://some_base_uri"
+        const collectionArtistName = "Jacob Riglin"
+        const collectionDescription = "Some description about the project"
+        const collectionCompiler = "Rhapsody Labs Compiler"
+
+        return {
+            "description": collectionDescription,
+            "image": `${collectionBaseUri}/${edition}.png`,
+            "name": `${collectionNamePrefix} #${edition}`,
+            "attributes": [gene.sequences.map((sequence: GeneSequence) => {
+                return {
+                    "trait_type": this.layers[sequence.layerIndex].name,
+                    "value": sequence.element.name,
+                }
+            })],
+            "artist": collectionArtistName,
+            "tokenHash": "some_token_hash",
+            "compiler": collectionCompiler
+        }
+    };
+
+    createRandomGene(): Gene {
         let sequences: GeneSequence[] = [];
 
         this.layers.forEach((layer, index) => {
@@ -111,7 +200,6 @@ class Layers {
             return false;
         }
 
-
         let count = 0;
         sequences.forEach((sequence) => {
             if (layer.combination[layer.elements[index].name].includes(this.layers[sequence.layerIndex].elements[sequence.elementIndex].name)) {
@@ -156,7 +244,7 @@ export class Layer {
         }
 
         this.name = config.name
-        this.elements = this.getLayerElements(`${layerPath}/${this.name}/`, rarityDelimiter)
+        this.elements = this.getLayerElements(`${layerPath}/${this.name}/`, rarityDelimiter, config)
         this.iterations = config.options?.iterations || 1
         this.occuranceRate = config.options?.occuranceRate || 1
         this.type = config.options?.type || LAYER_TYPES.NORMAL
@@ -172,29 +260,22 @@ export class Layer {
 
     getLayerElements = (
         path: string,
-        rarityDelimiter: string
+        rarityDelimiter: string,
+        config: LayerConfig
     ): LayerElement[] => {
-        return fs
-            .readdirSync(path)
-            .filter((item) => !/(^|\/)\.[^\/\.]/g.test(item))
-            .map((i, index) => {
-                return {
-                    id: index,
-                    name: this.getLayerName(i, rarityDelimiter),
-                    filename: i,
-                    path: `${path}${i}`,
-                    weight: this.getLayerElementRarity(i, rarityDelimiter),
-                };
-            });
+        return config.traits.map(({ name, weight }, index) => {
+            return {
+                id: index,
+                name: this.getLayerName(name, rarityDelimiter),
+                filename: name,
+                path: `${path}${name}`,
+                weight: weight || 1
+            }
+        })
     };
 
     getLayerName = (_name: string, rarityDelimiter: string): string => {
         return (_name.slice(0, -4)).split(rarityDelimiter).shift() || ""
-    }
-
-    getLayerElementRarity = (_name: string, rarityDelimiter: string): number => {
-        const weight = Number(_name.slice(0, -4).split(rarityDelimiter).pop())
-        return isNaN(weight) ? 1 : weight
     }
 }
 
