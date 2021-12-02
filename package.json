@@ -2,7 +2,7 @@
   "name": "@rhapsodylabs/layer-generator",
   "author": "Rhapsody Labs",
   "description": "A layer generator that takes image layers input and combines them to produce an image",
-  "license": "MIT",
+  "license": "GNU",
   "version": "1.0.0",
   "main": "index.ts",
   "pkg": {
