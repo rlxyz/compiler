@@ -1,7 +1,7 @@
 {
-  "name": "@rhapsodylabs/layer-compiler",
+  "name": "@rhapsodylabs/layer-generator",
   "author": "Rhapsody Labs",
-  "description": "A compiler that takes layer input and combines them to produce an image.",
+  "description": "A layer generator that takes image layers input and combines them to produce an image",
   "license": "MIT",
   "version": "1.0.0",
   "main": "index.ts",
