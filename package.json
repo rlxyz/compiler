@@ -3,7 +3,7 @@
   "author": "Rhapsody Labs",
   "description": "A layer generator that takes image layers input and combines them to produce an image",
   "license": "MIT",
-  "version": "1.0.5",
+  "version": "1.1.1",
   "main": "build/index.js",
   "types": "build/index.d.ts",
   "pkg": {
@@ -28,7 +28,7 @@
     "lint": "tslint -p tsconfig.json",
     "prepare": "npm run build",
     "publish": "npm publish",
-    "version": "npm run format && git add -A src",
+    "version": "npm run format && git add .",
     "postversion": "git push && git push --tags"
   },
   "dependencies": {

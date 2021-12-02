@@ -1,5 +1,5 @@
 import fs from 'fs';
-import { LayerConfig } from '../types';
+import { ImageFormatConfig, LayerConfig, Token } from '../types';
 import { CanvasObject, clearCanvas, createCanvas, drawImage, saveImage } from './canvas';
 import { LAYER_TYPES } from '../constants/layer';
 import { Gene } from './gene';
@@ -24,12 +24,12 @@ class Layers {
   layerPath: string;
   rarityDelimiter: string;
   geneDelimiter: string;
+  savePath: string;
 
   constructor(
     configs: LayerConfig[],
-    width: number,
-    height: number,
-    layerPath: string,
+    imageFormat: ImageFormatConfig,
+    basePath: string,
     rarityDelimiter?: string,
     geneDelimiter?: string,
   ) {
@@ -37,17 +37,20 @@ class Layers {
       throw new Error('configs failed with length 0');
     }
 
-    if (!fs.existsSync(layerPath)) {
+    this.layerPath = basePath + '/layers';
+
+    if (!fs.existsSync(this.layerPath)) {
       throw new Error('layerPath invalid');
     }
 
-    if (height === 0 || width === 0) {
+    this.savePath = basePath + '/images';
+
+    if (imageFormat.height === 0 || imageFormat.width === 0) {
       throw new Error('dimensions iinvalid');
     }
 
-    this.layerPath = layerPath;
-    this.width = width;
-    this.height = height;
+    this.width = imageFormat.width;
+    this.height = imageFormat.height;
     this.rarityDelimiter = rarityDelimiter || '#';
     this.geneDelimiter = geneDelimiter || '-';
     this.layers = configs.map((config: LayerConfig) => new Layer(config, this.layerPath, this.rarityDelimiter));
@@ -221,6 +224,10 @@ class Layers {
     });
     return false;
   }
+
+  generate = (token: Token) => {
+    this.createRandomImages(this.savePath, 1);
+  };
 }
 
 export class Layer {

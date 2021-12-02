@@ -13,9 +13,8 @@ class Generator {
     this.buildPath = `${config.build.basePath}/build/data`;
     this.layers = new Layers(
       layers,
-      config.format.width,
-      config.format.height,
-      config.build.basePath + '/layers',
+      config.format,
+      config.build.basePath,
       config.build.rarityDelimiter,
       config.build.geneDelimiter,
     );

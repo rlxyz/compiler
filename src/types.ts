@@ -1,5 +1,10 @@
 import { Image } from 'canvas';
 
+export type Token = {
+  tokenId: number;
+  hash: string;
+};
+
 export type BuildConfig = {
   basePath: string;
   invocations: number;
