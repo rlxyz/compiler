@@ -1,5 +1,5 @@
 import { Image, loadImage } from 'canvas';
-import { GeneSequence, CanvasRenderObject } from './types';
+import { GeneSequence, CanvasRenderObject } from '../types';
 
 export class Gene {
   sequences: GeneSequence[];

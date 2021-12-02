@@ -3,16 +3,20 @@
   "author": "Rhapsody Labs",
   "description": "A layer generator that takes image layers input and combines them to produce an image",
   "license": "MIT",
-  "version": "1.0.0",
+  "version": "1.0.5",
   "main": "build/index.js",
-  "types": "lib/index.d.ts",
+  "types": "build/index.d.ts",
   "pkg": {
     "assets": [
       "node_modules/**/*",
       "src/**/*"
     ]
   },
-  "keywords": ["generative", "genart", "canvas"],
+  "keywords": [
+    "generative",
+    "genart",
+    "canvas"
+  ],
   "files": [
     "build/**/*"
   ],
@@ -23,6 +27,7 @@
     "format": "prettier --write \"src/**/*.ts\"",
     "lint": "tslint -p tsconfig.json",
     "prepare": "npm run build",
+    "publish": "npm publish",
     "version": "npm run format && git add -A src",
     "postversion": "git push && git push --tags"
   },

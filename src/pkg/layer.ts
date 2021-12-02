@@ -1,9 +1,9 @@
 import fs from 'fs';
-import { LayerConfig } from '../utils/types';
-import { CanvasObject, clearCanvas, createCanvas, drawImage, saveImage } from '../utils/canvas';
+import { LayerConfig } from '../types';
+import { CanvasObject, clearCanvas, createCanvas, drawImage, saveImage } from './canvas';
 import { LAYER_TYPES } from '../constants/layer';
 import { Gene } from './gene';
-import { CanvasRenderObject, GeneSequence, LayerElement } from './types';
+import { CanvasRenderObject, GeneSequence, LayerElement } from '../types';
 
 const createImage = async (gene: Gene, width: number, height: number, savePath: string) => {
   const { canvas, context }: CanvasObject = createCanvas(width, height); // todo: not optimzed for speed

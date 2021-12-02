@@ -1,7 +1,7 @@
 import { Layers } from './layer';
-import { LayerConfig } from '../utils/types';
+import { LayerConfig } from '../types';
 import fs from 'fs';
-import { GeneratorConfig } from './types';
+import { GeneratorConfig } from '../types';
 
 class Generator {
   config: GeneratorConfig;

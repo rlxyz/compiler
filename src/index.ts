@@ -1,5 +1,23 @@
 import { Generator } from './pkg/generator';
 import { Layers } from './pkg/layer';
-import { GeneratorConfig, LayerElement, GeneSequence, CanvasRenderObject } from './pkg/types';
+import {
+  GeneratorConfig,
+  LayerElement,
+  GeneSequence,
+  CanvasRenderObject,
+  LayerConfig,
+  ImageFormatConfig,
+  BuildConfig,
+} from './types';
 
-export { Layers, Generator, GeneratorConfig, LayerElement, GeneSequence, CanvasRenderObject };
+export {
+  BuildConfig,
+  ImageFormatConfig,
+  LayerConfig,
+  Layers,
+  Generator,
+  GeneratorConfig,
+  LayerElement,
+  GeneSequence,
+  CanvasRenderObject,
+};
