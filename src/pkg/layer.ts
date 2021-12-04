@@ -25,11 +25,14 @@ class Layers {
   rarityDelimiter: string;
   geneDelimiter: string;
   savePath: string;
+  showRarity: any;
+  saveImage: boolean;
 
   constructor(
     configs: LayerConfig[],
     imageFormat: ImageFormatConfig,
     basePath: string,
+    saveImage?: boolean,
     rarityDelimiter?: string,
     geneDelimiter?: string,
   ) {
@@ -46,11 +49,12 @@ class Layers {
     this.savePath = basePath + '/images';
 
     if (imageFormat.height === 0 || imageFormat.width === 0) {
-      throw new Error('dimensions iinvalid');
+      throw new Error('dimensions invalid');
     }
 
     this.width = imageFormat.width;
     this.height = imageFormat.height;
+    this.saveImage = saveImage || false;
     this.rarityDelimiter = rarityDelimiter || '#';
     this.geneDelimiter = geneDelimiter || '-';
     this.layers = configs.map((config: LayerConfig) => new Layer(config, this.layerPath, this.rarityDelimiter));
@@ -73,14 +77,13 @@ class Layers {
 
     for (let i = 0; i < invocations; i++) {
       const gene: Gene = this.createRandomGene();
-      // createImage(gene, this.width, this.height, `${basePath}/images/${i}.png`)
+      this.saveImage ? createImage(gene, this.width, this.height, `${basePath}/images/${i}.png`) : null
       const metadata = this.createImageMetadata(gene, i);
-
       allMetadata.push(metadata);
       allGene.push(gene);
     }
 
-    this.calculateRarity(allGene, invocations);
+    this.showRarity ? this.calculateRarity(allGene, invocations) : null;
   };
 
   calculateRarity = (genes: Gene[], totalInvocations: number) => {

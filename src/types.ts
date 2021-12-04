@@ -9,6 +9,7 @@ export type BuildConfig = {
   basePath: string;
   invocations: number;
   rarityDelimiter: string;
+  saveImage: boolean
   geneDelimiter: string;
 };
 

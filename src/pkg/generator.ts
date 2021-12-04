@@ -15,6 +15,7 @@ class Generator {
       layers,
       config.format,
       config.build.basePath,
+      config.build.saveImage,
       config.build.rarityDelimiter,
       config.build.geneDelimiter,
     );
