@@ -1,16 +1,17 @@
 {
   "name": "@rhapsodylabs/rhapsodys",
   "common": {
-    "ethereum": "donations.rhapsodylabs.eth",
-    "funding": [
-      {
-        "type": "individual",
-        "url": "https://gitcoin.co/....."
-      }
-    ]
+    "ethereum": "donations.rhapsodylabs.eth"
   },
-  "description": "Core functionality for Ethereum-based NFT Projects based on Generative Art",
+  "description": "A generative art compiler for NFT projects",
   "author": "Rhapsody Labs",
+  "contributors": [
+    {
+      "name": "Jeevan Pillay <jeevanpillay.eth>",
+      "email": "jeeavn@rhapsodylabs.xyz",
+      "url": "https://twitter.com/jeevanpillay"
+    }
+  ],
   "license": "MIT",
   "version": "1.0.0",
   "main": "build/index.js",
