@@ -3,6 +3,7 @@
   "common": {
     "ethereum": "donations.rhapsodylabs.eth"
   },
+  "version": "1.0.0",
   "description": "A generative art compiler for NFT projects",
   "author": "Rhapsody Labs",
   "contributors": [
@@ -13,7 +14,6 @@
     }
   ],
   "license": "MIT",
-  "version": "1.0.0",
   "main": "build/index.js",
   "types": "build/index.d.ts",
   "pkg": {
@@ -32,15 +32,16 @@
     "build/**/*"
   ],
   "scripts": {
-    "prebuild": "rimraf ./build && tsc",
-    "build": "node build/index.js",
+    "prebuild": "rimraf ./build",
+    "build": "tsc",
+    "start": "node build/index.js",
     "test": "jest",
     "format": "prettier --write \"src/**/*.ts\"",
     "lint": "tslint -p tsconfig.json",
     "prepare": "npm run build",
-    "publish": "npm publish",
-    "version": "npm run format && git add .",
-    "postversion": "git push && git push --tags"
+    "publish": "npm publish --access public",
+    "postpublish": "PACKAGE_VERSION=$(./scripts/package-version.sh) && git tag -ae v$PACKAGE_VERSION && git push --tags",
+    "version": "npm run format && git add ."
   },
   "dependencies": {
     "canvas": "^2.8.0"

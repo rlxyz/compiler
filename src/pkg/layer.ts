@@ -77,7 +77,7 @@ class Layers {
 
     for (let i = 0; i < invocations; i++) {
       const gene: Gene = this.createRandomGene();
-      this.saveImage ? createImage(gene, this.width, this.height, `${basePath}/images/${i}.png`) : null
+      this.saveImage ? createImage(gene, this.width, this.height, `${basePath}/images/${i}.png`) : null;
       const metadata = this.createImageMetadata(gene, i);
       allMetadata.push(metadata);
       allGene.push(gene);
