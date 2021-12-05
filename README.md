@@ -1,5 +1,5 @@
 ## Installation 🛠️
 
 ```sh
-yarn add rhapsodys
+yarn add @rhapsodylabs/rhapsodys
 ```
