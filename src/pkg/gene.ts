@@ -1,4 +1,5 @@
 import { Image, loadImage } from 'canvas';
+import fs from 'fs';
 import { GeneSequence, CanvasRenderObject } from '../types';
 
 export class Gene {
@@ -15,7 +16,9 @@ export class Gene {
   loadImages = (): Promise<CanvasRenderObject>[] => {
     const loadedElements: Promise<CanvasRenderObject>[] = this.sequences.map((sequence) => {
       return new Promise(async (resolve) => {
-        const image: Image = await loadImage(`${sequence.element.path}`);
+        const path =
+          `${sequence.element.path}` + (sequence.element.linkExtension ? `_${sequence.element.linkExtension}` : '');
+        const image: Image = await loadImage(path);
         resolve({ image: image });
       });
     });

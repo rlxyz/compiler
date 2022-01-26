@@ -4,6 +4,7 @@ import { CanvasObject, clearCanvas, createCanvas, drawImage, saveImage } from '.
 import { LAYER_TYPES } from '../constants/layer';
 import { Gene } from './gene';
 import { CanvasRenderObject, GeneSequence, LayerElement } from '../types';
+import path from 'path';
 
 const createImage = async (gene: Gene, width: number, height: number, savePath: string) => {
   const { canvas, context }: CanvasObject = createCanvas(width, height); // todo: not optimzed for speed
@@ -27,6 +28,7 @@ class Layers {
   savePath: string;
   showRarity: any;
   saveImage: boolean;
+  append: boolean;
 
   constructor(
     configs: LayerConfig[],
@@ -35,6 +37,7 @@ class Layers {
     saveImage?: boolean,
     rarityDelimiter?: string,
     geneDelimiter?: string,
+    append?: boolean,
   ) {
     if (configs.length === 0) {
       throw new Error('configs failed with length 0');
@@ -57,6 +60,7 @@ class Layers {
     this.saveImage = saveImage || false;
     this.rarityDelimiter = rarityDelimiter || '#';
     this.geneDelimiter = geneDelimiter || '-';
+    this.append = true;
     this.layers = configs.map((config: LayerConfig) => new Layer(config, this.layerPath, this.rarityDelimiter));
   }
 
@@ -68,6 +72,15 @@ class Layers {
     return this.layers.length === 0;
   }
 
+  getAppendFileStart = (): number => {
+    const files = fs
+      .readdirSync(`${this.savePath}`)
+      .filter((file) => fs.lstatSync(path.join(`${this.savePath}`, file)).isFile())
+      .map((file) => ({ file, mtime: fs.lstatSync(path.join(`${this.savePath}`, file)).mtime }))
+      .sort((a, b) => b.mtime.getTime() - a.mtime.getTime());
+    return files.length > 0 ? Number(files[0].file.slice(0, -4)) : 0;
+  };
+
   // todo: add opacity + blend
   // todo: gene already exists
   // todo: add attributes/metadata
@@ -75,15 +88,18 @@ class Layers {
     const allMetadata: any[] = [];
     const allGene: Gene[] = [];
 
-    for (let i = 0; i < invocations; i++) {
+    let startPoint = this.append ? this.getAppendFileStart() : 0;
+
+    for (var i = startPoint; i < invocations + startPoint; i++) {
+      console.log(i);
       const gene: Gene = this.createRandomGene();
-      this.saveImage ? createImage(gene, this.width, this.height, `${basePath}/images/${i}.png`) : null;
+      this.saveImage ? await createImage(gene, this.width, this.height, `${this.savePath}/${i}.png`) : null;
       const metadata = this.createImageMetadata(gene, i);
       allMetadata.push(metadata);
       allGene.push(gene);
     }
 
-    this.showRarity ? this.calculateRarity(allGene, invocations) : null;
+    this.calculateRarity(allGene, invocations);
   };
 
   calculateRarity = (genes: Gene[], totalInvocations: number) => {
@@ -120,16 +136,7 @@ class Layers {
   };
 
   createImageMetadata = (gene: Gene, edition: number) => {
-    const collectionNamePrefix = 'DreamLab';
-    const collectionBaseUri = 'ipfs://some_base_uri';
-    const collectionArtistName = 'Jacob Riglin';
-    const collectionDescription = 'Some description about the project';
-    const collectionCompiler = 'Rhapsody Labs Compiler';
-
     return {
-      description: collectionDescription,
-      image: `${collectionBaseUri}/${edition}.png`,
-      name: `${collectionNamePrefix} #${edition}`,
       attributes: [
         gene.sequences.map((sequence: GeneSequence) => {
           return {
@@ -138,9 +145,6 @@ class Layers {
           };
         }),
       ],
-      artist: collectionArtistName,
-      tokenHash: 'some_token_hash',
-      compiler: collectionCompiler,
     };
   };
 
@@ -167,11 +171,40 @@ class Layers {
 
           random -= layer.elements[i].weight;
           if (random < 0) {
+            let element = this.layers[index].elements.find((e) => e.id == layer.elements[i].id);
+
+            if (element?.link !== undefined) {
+              let randomLink = Math.floor(Math.random() * this.elementLinkWeight(element));
+
+              for (var z = 0; z < element.link.length; z++) {
+                randomLink -= element.link[z].weight;
+                if (randomLink < 0) {
+                  // @ts-ignore
+                  element.linkExtension = `${element.link[z].name}`;
+                  break;
+                }
+              }
+            } else if (layer.link !== undefined) {
+              if (layer.link !== undefined) {
+                let randomLink = Math.floor(Math.random() * this.layerLinkWeight(layer));
+
+                for (var z = 0; z < layer.link.length; z++) {
+                  randomLink -= layer.link[z].weight;
+                  if (randomLink < 0) {
+                    // @ts-ignore
+                    element.linkExtension = `${layer.link[z].name}`;
+                    break;
+                  }
+                }
+              }
+            }
+
             sequences.push({
               layerIndex: index,
               elementIndex: layer.elements[i].id,
-              element: this.layers[index].elements.find((e) => e.id == layer.elements[i].id),
+              element: element,
             });
+
             break;
           }
         }
@@ -181,7 +214,25 @@ class Layers {
     return new Gene(sequences);
   }
 
+  elementLinkWeight(element: LayerElement): number {
+    if (element.link === undefined) return 0;
+    var totalWeight = 0;
+    element.link.forEach((link) => {
+      totalWeight += link.weight;
+    });
+    return totalWeight;
+  }
+
+  layerLinkWeight(layer: Layer): number {
+    var totalWeight = 0;
+    layer.link.forEach((element: any) => {
+      totalWeight += element.weight;
+    });
+    return totalWeight;
+  }
+
   layerElementWeight(layer: Layer): number {
+    if (layer.elements === undefined) return 0;
     var totalWeight = 0;
     layer.elements.forEach((element) => {
       totalWeight += element.weight;
@@ -228,8 +279,8 @@ class Layers {
     return false;
   }
 
-  generate = (token: Token) => {
-    this.createRandomImages(this.savePath, 1);
+  generate = (token: Token, invocations: number = 1) => {
+    this.createRandomImages(this.savePath, invocations);
   };
 }
 
@@ -241,6 +292,7 @@ export class Layer {
   type?: string;
   combination?: any;
   exclude?: any;
+  link?: any;
 
   // todo: fix rarityDelimter being passed multiple times
   // todo: fix type name checking conmbination and exclude properties
@@ -254,6 +306,7 @@ export class Layer {
     this.iterations = config.options?.iterations || 1;
     this.occuranceRate = config.options?.occuranceRate || 1;
     this.type = config.options?.type || LAYER_TYPES.NORMAL;
+    this.link = config?.link || undefined;
 
     if (config.options?.combination != undefined) {
       this.combination = config.options.combination;
@@ -265,19 +318,21 @@ export class Layer {
   }
 
   getLayerElements = (path: string, rarityDelimiter: string, config: LayerConfig): LayerElement[] => {
-    return config.traits.map(({ name, weight }, index) => {
+    return config.traits.map(({ name, weight, link }, index) => {
       return {
         id: index,
         name: this.getLayerName(name, rarityDelimiter),
         filename: name,
-        path: `${path}${name}`,
+        path: `${path}${name}`.replace(/(\s+)/g, '$1'),
         weight: weight || 1,
+        link: link,
       };
     });
   };
 
   getLayerName = (_name: string, rarityDelimiter: string): string => {
-    return _name.slice(0, -4).split(rarityDelimiter).shift() || '';
+    const isImage = _name.match(/.(jpg|jpeg|png|gif)$/i) !== null;
+    return isImage ? _name.slice(0, -4).split(rarityDelimiter).shift() || '' : _name;
   };
 }
 
