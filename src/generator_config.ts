@@ -31,307 +31,451 @@ const layerConfig: LayerConfig[] = [
     traits: [
       {
         name: '1. Terminator',
-        weight: 15,
+        weight: 3,
         link: [
           {
-            name: 'Alert.png',
-            weight: 80,
+            name: 'Fighting Stance.png',
+            weight: 120,
           },
           {
-            name: 'Pounce.png',
-            weight: 35,
+            name: 'Fury.png',
+            weight: 50,
           },
           {
-            name: 'Attentive.png',
-            weight: 30,
+            name: 'Leap.png',
+            weight: 50,
           },
           {
-            name: 'Aware.png',
-            weight: 25,
+            name: 'Lurking.png',
+            weight: 100,
           },
           {
-            name: 'Calm.png',
-            weight: 25,
+            name: 'Majestic.png',
+            weight: 50,
           },
           {
-            name: 'Covert.png',
-            weight: 25,
+            name: 'Rage.png',
+            weight: 130,
+          },
+          {
+            name: 'Roar.png',
+            weight: 110,
+          },
+          {
+            name: 'Strike.png',
+            weight: 50,
+          },
+          {
+            name: 'Supreme.png',
+            weight: 220,
+          },
+          {
+            name: 'Yawn.png',
+            weight: 120,
           },
         ],
       },
       {
         name: '2. Jade',
-        weight: 30,
+        weight: 25,
       },
       {
         name: '3. Water',
-        weight: 30,
+        weight: 28,
       },
       {
         name: '4. Silver',
-        weight: 75,
+        weight: 83,
       },
       {
         name: '5. Trippy',
-        weight: 20,
+        weight: 7,
         link: [
           {
             name: 'Alert.png',
+            weight: 110,
+          },
+          {
+            name: 'Covert.png',
+            weight: 110,
+          },
+          {
+            name: 'Fighting Stance.png',
+            weight: 60,
+          },
+          {
+            name: 'Fury.png',
+            weight: 40,
+          },
+          {
+            name: 'Leap.png',
+            weight: 40,
+          },
+          {
+            name: 'Lurking.png',
+            weight: 50,
+          },
+          {
+            name: 'Majestic.png',
+            weight: 40,
+          },
+          {
+            name: 'Mighty.png',
             weight: 80,
           },
-          // {
-          //   name: 'Pounce.png',
-          //   weight: 35,
-          // },
-          // {
-          //   name: 'Attentive.png',
-          //   weight: 30,
-          // },
-          // {
-          //   name: 'Aware.png',
-          //   weight: 25,
-          // },
-          // {
-          //   name: 'Calm.png',
-          //   weight: 25,
-          // },
-          // {
-          //   name: 'Covert.png',
-          //   weight: 25,
-          // },
+          {
+            name: 'Rage.png',
+            weight: 60,
+          },
+          {
+            name: 'Roar.png',
+            weight: 50,
+          },
+          {
+            name: 'Strike.png',
+            weight: 40,
+          },
+          {
+            name: 'Strong.png',
+            weight: 90,
+          },
+          {
+            name: 'Supreme.png',
+            weight: 70,
+          },
+          {
+            name: 'Swole.png',
+            weight: 90,
+          },
+          {
+            name: 'Yawn.png',
+            weight: 70,
+          },
         ],
       },
       {
         name: '6. Gold',
-        weight: 75,
+        weight: 13,
         link: [
           {
             name: 'Alert.png',
+            weight: 90,
+          },
+          {
+            name: 'Covert.png',
+            weight: 90,
+          },
+          {
+            name: 'Fighting Stance.png',
+            weight: 50,
+          },
+          {
+            name: 'Fury.png',
+            weight: 40,
+          },
+          {
+            name: 'Growl.png',
+            weight: 100,
+          },
+          {
+            name: 'Leap.png',
+            weight: 40,
+          },
+          {
+            name: 'Lurking.png',
+            weight: 40,
+          },
+          {
+            name: 'Majestic.png',
+            weight: 40,
+          },
+          {
+            name: 'Mighty.png',
+            weight: 70,
+          },
+          {
+            name: 'Rage.png',
+            weight: 60,
+          },
+          {
+            name: 'Roar.png',
+            weight: 50,
+          },
+          {
+            name: 'Strike.png',
+            weight: 40,
+          },
+          {
+            name: 'Strong.png',
             weight: 80,
           },
-          // {
-          //   name: 'Pounce.png',
-          //   weight: 35,
-          // },
-          // {
-          //   name: 'Attentive.png',
-          //   weight: 30,
-          // },
-          // {
-          //   name: 'Aware.png',
-          //   weight: 25,
-          // },
-          // {
-          //   name: 'Calm.png',
-          //   weight: 25,
-          // },
-          // {
-          //   name: 'Covert.png',
-          //   weight: 25,
-          // },
+          {
+            name: 'Supreme.png',
+            weight: 70,
+          },
+          {
+            name: 'Swole.png',
+            weight: 80,
+          },
+          {
+            name: 'Yawn.png',
+            weight: 60,
+          },
         ],
       },
       {
         name: '7. Noise',
-        weight: 30,
+        weight: 54,
       },
       {
         name: '8. Galaxy',
-        weight: 20,
+        weight: 10,
         link: [
           {
             name: 'Alert.png',
+            weight: 110,
+          },
+          {
+            name: 'Covert.png',
+            weight: 110,
+          },
+          {
+            name: 'Fighting Stance.png',
+            weight: 60,
+          },
+          {
+            name: 'Fury.png',
+            weight: 40,
+          },
+          {
+            name: 'Leap.png',
+            weight: 40,
+          },
+          {
+            name: 'Lurking.png',
+            weight: 50,
+          },
+          {
+            name: 'Majestic.png',
+            weight: 40,
+          },
+          {
+            name: 'Mighty.png',
             weight: 80,
           },
-          // {
-          //   name: 'Pounce.png',
-          //   weight: 35,
-          // },
-          // {
-          //   name: 'Attentive.png',
-          //   weight: 30,
-          // },
-          // {
-          //   name: 'Aware.png',
-          //   weight: 25,
-          // },
-          // {
-          //   name: 'Calm.png',
-          //   weight: 25,
-          // },
-          // {
-          //   name: 'Covert.png',
-          //   weight: 25,
-          // },
+          {
+            name: 'Rage.png',
+            weight: 60,
+          },
+          {
+            name: 'Roar.png',
+            weight: 50,
+          },
+          {
+            name: 'Strike.png',
+            weight: 40,
+          },
+          {
+            name: 'Strong.png',
+            weight: 90,
+          },
+          {
+            name: 'Supreme.png',
+            weight: 70,
+          },
+          {
+            name: 'Swole.png',
+            weight: 90,
+          },
+          {
+            name: 'Yawn.png',
+            weight: 70,
+          },
         ],
       },
       {
         name: '9. Blue',
-        weight: 25,
+        weight: 6,
         link: [
           {
-            name: 'Alert.png',
+            name: 'Fighting Stance.png',
             weight: 80,
           },
-          // {
-          //   name: 'Pounce.png',
-          //   weight: 35,
-          // },
-          // {
-          //   name: 'Attentive.png',
-          //   weight: 30,
-          // },
-          // {
-          //   name: 'Aware.png',
-          //   weight: 25,
-          // },
-          // {
-          //   name: 'Calm.png',
-          //   weight: 25,
-          // },
-          // {
-          //   name: 'Covert.png',
-          //   weight: 25,
-          // },
+          {
+            name: 'Fury.png',
+            weight: 80,
+          },
+          {
+            name: 'Leap.png',
+            weight: 80,
+          },
+          {
+            name: 'Lurking.png',
+            weight: 100,
+          },
+          {
+            name: 'Majestic.png',
+            weight: 80,
+          },
+          {
+            name: 'Rage.png',
+            weight: 110,
+          },
+          {
+            name: 'Roar.png',
+            weight: 110,
+          },
+          {
+            name: 'Strike.png',
+            weight: 90,
+          },
+          {
+            name: 'Supreme.png',
+            weight: 120,
+          },
+          {
+            name: 'Yawn.png',
+            weight: 120,
+          },
         ],
       },
       {
         name: '10. Armoured',
-        weight: 30,
+        weight: 58,
       },
       {
         name: '11. Standard',
-        weight: 120,
+        weight: 105,
       },
       {
         name: '12. Fire',
-        weight: 25,
+        weight: 43,
       },
       {
         name: '13. 3rd Eye',
-        weight: 30,
+        weight: 51,
       },
       {
         name: '14. Radioactive',
-        weight: 25,
+        weight: 39,
       },
       {
         name: '15. Stone',
-        weight: 75,
+        weight: 65,
       },
       {
         name: '16. Tan',
-        weight: 75,
+        weight: 88,
       },
       {
         name: '17. Pink',
-        weight: 75,
+        weight: 79,
       },
       {
         name: '18. Purple',
-        weight: 75,
+        weight: 71,
       },
       {
         name: '19. Dark Grey',
-        weight: 75,
+        weight: 73,
       },
       {
         name: '20. White',
-        weight: 75,
+        weight: 97,
       },
     ],
     link: [
       {
         name: 'Alert.png',
-        weight: 80,
+        weight: 31,
       },
       {
         name: 'Pounce.png',
-        weight: 35,
+        weight: 44,
       },
       {
         name: 'Attentive.png',
-        weight: 30,
+        weight: 35,
       },
       {
         name: 'Aware.png',
-        weight: 25,
-      },
-      {
-        name: 'Calm.png',
-        weight: 25,
-      },
-      {
-        name: 'Covert.png',
-        weight: 25,
-      },
-      {
-        name: 'Fighting Stance.png',
         weight: 40,
       },
       {
+        name: 'Calm.png',
+        weight: 41,
+      },
+      {
+        name: 'Covert.png',
+        weight: 32,
+      },
+      {
+        name: 'Fighting Stance.png',
+        weight: 21,
+      },
+      {
         name: 'Fury.png',
-        weight: 10,
+        weight: 12,
       },
       {
         name: 'Growl.png',
-        weight: 75,
+        weight: 33,
       },
       {
         name: 'Leap.png',
-        weight: 50,
+        weight: 11,
       },
       {
         name: 'Lunging.png',
-        weight: 50,
+        weight: 42,
       },
       {
         name: 'Lurking.png',
-        weight: 10,
+        weight: 18,
       },
       {
         name: 'Mighty.png',
-        weight: 5,
+        weight: 28,
       },
       {
         name: 'Majestic.png',
-        weight: 20,
+        weight: 9,
       },
       {
         name: 'Parade.png',
-        weight: 30,
+        weight: 43,
       },
       {
         name: 'Peaceful.png',
-        weight: 35,
+        weight: 43,
       },
       {
         name: 'Primed.png',
-        weight: 35,
+        weight: 46,
       },
       {
         name: 'Rage.png',
-        weight: 75,
+        weight: 23,
       },
       {
         name: 'Relaxed.png',
-        weight: 20,
+        weight: 48,
       },
       {
         name: 'Roar.png',
-        weight: 5,
-      },
-      {
-        name: 'Sit.png',
-        weight: 15,
-      },
-      {
-        name: 'Stealth.png',
         weight: 20,
       },
       {
+        name: 'Sit.png',
+        weight: 50,
+      },
+      {
+        name: 'Stealth.png',
+        weight: 50,
+      },
+      {
         name: 'Strike.png',
-        weight: 75,
+        weight: 15,
       },
       {
         name: 'Strong.png',
@@ -339,7 +483,7 @@ const layerConfig: LayerConfig[] = [
       },
       {
         name: 'Supreme.png',
-        weight: 10,
+        weight: 25,
       },
       {
         name: 'Swift.png',
@@ -347,19 +491,19 @@ const layerConfig: LayerConfig[] = [
       },
       {
         name: 'Swole.png',
-        weight: 10,
+        weight: 30,
       },
       {
         name: 'The Claw.png',
-        weight: 25,
+        weight: 52,
       },
       {
         name: 'Vicious.png',
-        weight: 35,
+        weight: 54,
       },
       {
         name: 'Yawn.png',
-        weight: 50,
+        weight: 24,
       },
     ],
   },
@@ -368,35 +512,35 @@ const layerConfig: LayerConfig[] = [
     traits: [
       {
         name: 'Cards.png',
-        weight: 75,
+        weight: 60,
       },
       {
         name: 'Dice.png',
-        weight: 90,
+        weight: 85,
       },
       {
         name: 'Fire Crackers.png',
-        weight: 112.5,
+        weight: 152.5,
       },
       {
         name: 'Koi Fish.png',
-        weight: 100,
-      },
-      {
-        name: 'Lotus.png',
         weight: 122.5,
       },
       {
+        name: 'Lotus.png',
+        weight: 130,
+      },
+      {
         name: 'Mah Jong.png',
-        weight: 50,
+        weight: 100,
       },
       {
         name: 'Mandarin Oranges.png',
-        weight: 200,
+        weight: 160,
       },
       {
         name: 'Tea Pot.png',
-        weight: 250,
+        weight: 190,
       },
     ],
   },
@@ -405,39 +549,39 @@ const layerConfig: LayerConfig[] = [
     traits: [
       {
         name: 'Bonsai.png',
-        weight: 50,
-      },
-      {
-        name: 'Foo Dog.png',
-        weight: 75,
-      },
-      {
-        name: 'Lantern.png',
         weight: 112.5,
       },
       {
+        name: 'Foo Dog.png',
+        weight: 55,
+      },
+      {
+        name: 'Lantern.png',
+        weight: 90,
+      },
+      {
         name: 'Money Cat.png',
-        weight: 100,
+        weight: 45,
       },
       {
         name: 'Prosperity God.png',
-        weight: 122.5,
+        weight: 100,
       },
       {
         name: 'Chinese Coin.png',
-        weight: 140,
+        weight: 122.5,
       },
       {
         name: 'Lion Dance.png',
-        weight: 175,
+        weight: 60,
       },
       {
         name: 'Peach.png',
-        weight: 225,
+        weight: 150,
       },
       // {
       //   name: 'Ying Yang.png',
-      //   weight: 0,
+      //   weight: 190,
       // },
     ],
   },
@@ -446,43 +590,43 @@ const layerConfig: LayerConfig[] = [
     traits: [
       {
         name: 'Bamboo.png',
-        weight: 50,
+        weight: 45,
       },
       {
         name: 'Clouds.png',
-        weight: 75,
-      },
-      {
-        name: 'Palm Tree.png',
-        weight: 112.5,
-      },
-      {
-        name: 'Scrolls.png',
         weight: 100,
       },
       {
+        name: 'Palm Tree.png',
+        weight: 55,
+      },
+      {
+        name: 'Scrolls.png',
+        weight: 45,
+      },
+      {
         name: 'Swords.png',
-        weight: 122.5,
+        weight: 112.5,
       },
       {
         name: 'Cherry Blossom.png',
-        weight: 140,
+        weight: 122.5,
       },
       {
         name: 'Hibiscus.png',
-        weight: 175,
+        weight: 60,
       },
       {
         name: 'Rings.png',
-        weight: 225,
+        weight: 150,
       },
       {
         name: 'Swallows.png',
-        weight: 0,
+        weight: 190,
       },
       {
         name: 'Waves.png',
-        weight: 0,
+        weight: 75,
       },
     ],
   },
@@ -499,11 +643,11 @@ const layerConfig: LayerConfig[] = [
       },
       {
         name: '1961.png',
-        weight: 112.5,
+        weight: 100,
       },
       {
         name: '1970.png',
-        weight: 100,
+        weight: 112.5,
       },
       {
         name: '1998.png',
