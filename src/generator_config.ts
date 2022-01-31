@@ -27,7 +27,8 @@ const layerConfig: LayerConfig[] = [
     ],
   },
   {
-    name: 'Tiger',
+    name: 'Skin',
+    metadata: true,
     traits: [
       {
         name: '1. Terminator',
@@ -384,14 +385,11 @@ const layerConfig: LayerConfig[] = [
         weight: 97,
       },
     ],
+    linkName: 'Pose',
     link: [
       {
         name: 'Alert.png',
         weight: 31,
-      },
-      {
-        name: 'Pounce.png',
-        weight: 44,
       },
       {
         name: 'Attentive.png',
@@ -434,12 +432,12 @@ const layerConfig: LayerConfig[] = [
         weight: 18,
       },
       {
-        name: 'Mighty.png',
-        weight: 28,
-      },
-      {
         name: 'Majestic.png',
         weight: 9,
+      },
+      {
+        name: 'Mighty.png',
+        weight: 28,
       },
       {
         name: 'Parade.png',
@@ -447,6 +445,10 @@ const layerConfig: LayerConfig[] = [
       },
       {
         name: 'Peaceful.png',
+        weight: 43,
+      },
+      {
+        name: 'Pounce.png',
         weight: 43,
       },
       {
@@ -509,6 +511,7 @@ const layerConfig: LayerConfig[] = [
   },
   {
     name: 'Lucky Charms',
+    metadata: true,
     traits: [
       {
         name: 'Cards.png',
@@ -545,7 +548,8 @@ const layerConfig: LayerConfig[] = [
     ],
   },
   {
-    name: 'Emblems',
+    name: 'Emblem',
+    metadata: true,
     traits: [
       {
         name: 'Bonsai.png',
@@ -576,21 +580,30 @@ const layerConfig: LayerConfig[] = [
         weight: 60,
       },
       {
+        name: 'Fortune.png',
+        weight: 75,
+      },
+      {
         name: 'Peach.png',
         weight: 150,
       },
-      // {
-      //   name: 'Ying Yang.png',
-      //   weight: 190,
-      // },
+      {
+        name: 'Ying Yang.png',
+        weight: 190,
+      },
     ],
   },
   {
     name: 'Frames',
+    metadata: true,
     traits: [
       {
         name: 'Bamboo.png',
-        weight: 45,
+        weight: 90,
+      },
+      {
+        name: 'Hibiscus.png',
+        weight: 60,
       },
       {
         name: 'Clouds.png',
@@ -631,27 +644,28 @@ const layerConfig: LayerConfig[] = [
     ],
   },
   {
-    name: 'Beers',
+    name: 'Tiger Beer',
+    metadata: true,
     traits: [
       {
         name: '1932.png',
-        weight: 50,
+        weight: 40,
       },
       {
         name: '1953.png',
-        weight: 75,
+        weight: 65,
       },
       {
         name: '1961.png',
-        weight: 100,
+        weight: 85,
       },
       {
         name: '1970.png',
-        weight: 112.5,
+        weight: 100,
       },
       {
         name: '1998.png',
-        weight: 122.5,
+        weight: 120,
       },
       {
         name: '2005.png',
@@ -667,15 +681,15 @@ const layerConfig: LayerConfig[] = [
       },
     ],
   },
-  // {
-  //   name: 'Texture',
-  //   traits: [
-  //     {
-  //       name: 'Texture-01.png',
-  //       weight: 1,
-  //     },
-  // //   ],
-  // },
+  {
+    name: 'Texture',
+    traits: [
+      {
+        name: 'Texture-01.png',
+        weight: 1,
+      },
+    ],
+  },
 ];
 
 export { imageFormatConfig, buildConfig, layerConfig };

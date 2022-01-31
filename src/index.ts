@@ -5,7 +5,7 @@ const basePath = process.cwd();
 
 const createImage = (token: any, savePath: string) => {
   const layers = new Layers(layerConfig, imageFormatConfig, basePath, true);
-  layers.generate(token, 25000);
+  layers.generate(token, 6688);
 };
 
 (() => {
