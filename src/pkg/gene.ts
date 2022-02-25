@@ -18,6 +18,7 @@ export class Gene {
       return new Promise(async (resolve) => {
         const path =
           `${sequence.element.path}` + (sequence.element.linkExtension ? `_${sequence.element.linkExtension}` : '');
+        console.log(path);
         const image: Image = await loadImage(path);
         resolve({ image: image });
       });

@@ -99,8 +99,8 @@ class Layers {
     const allHash = new Set();
     const allAttributes = [];
 
-    let startPoint = this.append ? this.getAppendFileStart() : 0;
-    console.log(startPoint)
+    let startPoint = this.getAppendFileStart() + 1;
+    console.log(startPoint);
     for (var i = startPoint; i < invocations + startPoint; ) {
       console.log(i);
       const gene: Gene = this.createRandomGene();
