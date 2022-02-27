@@ -1,11 +1,11 @@
-import { Layers } from './old_index';
+import { Layers } from './pkg/layer';
 import { imageFormatConfig, layerConfig } from './generator_config';
 
 const basePath = process.cwd();
 
 const createImage = (token: any, savePath: string) => {
   const layers = new Layers(layerConfig, imageFormatConfig, basePath, true);
-  layers.generate(token, 1);
+  layers.generate(token, 1111);
 };
 
 (() => {

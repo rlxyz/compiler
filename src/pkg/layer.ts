@@ -216,59 +216,6 @@ class Layers {
     // console.log(rank);
   };
 
-  calculateRarity = (genes: Gene[], totalInvocations: number) => {
-    // const layerRarity: any = {};
-    // this.layers.forEach((layer: Layer, i) => {
-    //   if (layer.metadata) {
-    //     layerRarity[i] = {};
-    //     layer.elements.forEach((element, j) => {
-    //       layerRarity[i][j] = {
-    //         trait: element.name,
-    //         weight: element.weight,
-    //         occurance: 0,
-    //       };
-    //     });
-    //     if (layer.link && layer.linkName) {
-    //       const linkName = layer.linkName;
-    //       layerRarity[linkName] = {};
-    //       layer.link.forEach((l: any) => {
-    //         layerRarity[linkName][l.name] = {
-    //           trait: l.name,
-    //           weight: l.weight,
-    //           occurance: 0,
-    //         };
-    //       });
-    //     }
-    //   }
-    // });
-    // console.log(layerRarity);
-    // genes.forEach((gene: Gene) => {
-    //   gene.sequences.forEach((sequence: GeneSequence) => {
-    //     if (layerRarity[sequence.layerIndex]) {
-    //       layerRarity[sequence.layerIndex][sequence.elementIndex].occurance++;
-    //     }
-    //     if (sequence.element.linkExtension) {
-    //       layerRarity['Pose'][sequence.element.linkExtension].occurance++;
-    //     }
-    //   });
-    // });
-    // for (let layer in layerRarity) {
-    //   if (layerRarity[layer]) {
-    //     if (layer === 'Pose') {
-    //       break;
-    //     }
-    //     const currentLayer = this.layers[Number(layer)];
-    //     console.log(`Trait Type ${currentLayer.name}`);
-    //     for (let attribute in layerRarity[layer]) {
-    //       console.log(
-    //         `${currentLayer.elements[Number(attribute)].name} -- `,
-    //         ((layerRarity[layer][attribute].occurance / totalInvocations) * 100).toFixed(10) + '% out of 100%',
-    //       );
-    //     }
-    //   }
-    // }
-  };
-
   createImageMetadata = (gene: Gene, edition: number) => {
     let attributes: any[] = [];
 
@@ -441,8 +388,8 @@ class Layers {
     return false;
   }
 
-  generate = (token: Token, invocations: number = 1) => {
-    this.createRandomImages(this.savePath, invocations);
+  generate = (token: Token, invocation: number = 1) => {
+    this.createRandomImages(this.savePath, invocation);
   };
 }
 
