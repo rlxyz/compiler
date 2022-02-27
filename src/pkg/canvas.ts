@@ -1,14 +1,14 @@
-import { Image, Canvas, createCanvas as createCanvasImplementation, NodeCanvasRenderingContext2D } from 'canvas';
+import { Image, Canvas, createCanvas as createCanvasImplementation, CanvasRenderingContext2D } from 'canvas';
 import fs from 'fs';
 
 export type CanvasObject = {
   canvas: Canvas;
-  context: NodeCanvasRenderingContext2D;
+  context: CanvasRenderingContext2D;
 };
 
 export const createCanvas = (width: number, height: number): CanvasObject => {
   const canvas: Canvas = createCanvasImplementation(width, height);
-  const ctx: NodeCanvasRenderingContext2D = canvas.getContext('2d');
+  const ctx: CanvasRenderingContext2D = canvas.getContext('2d');
   return {
     canvas: canvas,
     context: ctx,
@@ -19,12 +19,12 @@ export const saveImage = (canvas: Canvas, path: string) => {
   fs.writeFileSync(path, canvas.toBuffer('image/png'));
 };
 
-export const clearCanvas = (context: NodeCanvasRenderingContext2D, width: number, height: number) => {
+export const clearCanvas = (context: CanvasRenderingContext2D, width: number, height: number) => {
   context.clearRect(0, 0, width, height);
 };
 
 export const drawImage = (
-  context: NodeCanvasRenderingContext2D,
+  context: CanvasRenderingContext2D,
   image: Image,
   width: number,
   height: number,
