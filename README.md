@@ -21,7 +21,7 @@ Once installed, you can use the generative compiler in the library by following 
 
 ### Step 1: Create folder in root of project called `layers` and add layers.
 
-```sh
+```console
 root
   - src
   - layers
@@ -37,7 +37,7 @@ root
 
 ### Step 2: Set these variables.
 
-```sh
+```javascript
 const imageFormatConfig: ImageFormatConfig = {
     width: 500,
     height: 500,
@@ -47,7 +47,7 @@ const imageFormatConfig: ImageFormatConfig = {
 
 ### Step 3: Create these folders at root
 
-```sh
+```console
 root
   - layers
   - images
