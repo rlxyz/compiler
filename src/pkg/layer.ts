@@ -6,21 +6,15 @@ import { Gene } from './gene';
 import { CanvasRenderObject, GeneSequence, LayerElement } from '../types';
 import path from 'path';
 import sha256 from 'crypto-js/sha256';
-
-const getLayerName = (_name: string, rarityDelimiter: string): string => {
-  const isImage = _name.match(/.(jpg|jpeg|png|gif)$/i) !== null;
-  return isImage ? _name.slice(0, -4).split(rarityDelimiter).shift() || '' : _name;
-};
+import { logger } from './logger';
 
 const createImage = async (gene: Gene, width: number, height: number, savePath: string) => {
-  const { canvas, context }: CanvasObject = createCanvas(width, height); // todo: not optimzed for speed
+  const { canvas, context }: CanvasObject = createCanvas(width, height);
   const loadedImages: Promise<CanvasRenderObject>[] = gene.loadImages();
   await Promise.all(loadedImages).then((render: CanvasRenderObject[]) => {
     clearCanvas(context, width, height);
-    var i = 0;
     render.forEach((object: CanvasRenderObject) => {
-      drawImage(context, object.image, width, height, i == 6 ? 0.2 : undefined); // todo: fix
-      i++;
+      drawImage(context, object.image, width, height); // todo: fix
     });
     saveImage(canvas, savePath);
   });
@@ -91,21 +85,20 @@ class Layers {
     return files.length > 0 ? Number(files[0].file.slice(0, -4)) : 0;
   };
 
-  // todo: add opacity + blend
-  // todo: gene already exists
-  // todo: add attributes/metadata
-  createRandomImages = async (basePath: string, invocations: number) => {
-    const allGene: Gene[] = [];
+  createRandomImages = async (invocations: number) => {
     const allHash = new Set();
     const allAttributes = [];
 
     let startPoint = this.getAppendFileStart() + 1;
-    console.log(startPoint);
     for (var i = startPoint; i < invocations + startPoint; ) {
-      console.log(i);
       const gene: Gene = this.createRandomGene();
-      this.saveImage ? await createImage(gene, this.width, this.height, `${this.savePath}/${i}.png`) : null;
+      logger.info('new gene');
+
+      if (this.saveImage) {
+        await createImage(gene, this.width, this.height, `${this.savePath}/${i}.png`);
+      }
       const attributes: any[] = this.createImageMetadata(gene, i);
+
       const hash: string = sha256(
         attributes
           .map((attr) => {
@@ -114,15 +107,13 @@ class Layers {
           .join('-'),
       ).toString();
 
-      allAttributes.push(attributes);
-      allGene.push(gene);
-
       if (!allHash.has(hash)) {
         i++;
         allHash.add(hash);
+        allAttributes.push(attributes);
       }
     }
-    // this.calculateRarity(allGene, invocations);
+
     this.calculateRarityAttributes(allAttributes);
   };
 
@@ -216,64 +207,11 @@ class Layers {
     // console.log(rank);
   };
 
-  calculateRarity = (genes: Gene[], totalInvocations: number) => {
-    // const layerRarity: any = {};
-    // this.layers.forEach((layer: Layer, i) => {
-    //   if (layer.metadata) {
-    //     layerRarity[i] = {};
-    //     layer.elements.forEach((element, j) => {
-    //       layerRarity[i][j] = {
-    //         trait: element.name,
-    //         weight: element.weight,
-    //         occurance: 0,
-    //       };
-    //     });
-    //     if (layer.link && layer.linkName) {
-    //       const linkName = layer.linkName;
-    //       layerRarity[linkName] = {};
-    //       layer.link.forEach((l: any) => {
-    //         layerRarity[linkName][l.name] = {
-    //           trait: l.name,
-    //           weight: l.weight,
-    //           occurance: 0,
-    //         };
-    //       });
-    //     }
-    //   }
-    // });
-    // console.log(layerRarity);
-    // genes.forEach((gene: Gene) => {
-    //   gene.sequences.forEach((sequence: GeneSequence) => {
-    //     if (layerRarity[sequence.layerIndex]) {
-    //       layerRarity[sequence.layerIndex][sequence.elementIndex].occurance++;
-    //     }
-    //     if (sequence.element.linkExtension) {
-    //       layerRarity['Pose'][sequence.element.linkExtension].occurance++;
-    //     }
-    //   });
-    // });
-    // for (let layer in layerRarity) {
-    //   if (layerRarity[layer]) {
-    //     if (layer === 'Pose') {
-    //       break;
-    //     }
-    //     const currentLayer = this.layers[Number(layer)];
-    //     console.log(`Trait Type ${currentLayer.name}`);
-    //     for (let attribute in layerRarity[layer]) {
-    //       console.log(
-    //         `${currentLayer.elements[Number(attribute)].name} -- `,
-    //         ((layerRarity[layer][attribute].occurance / totalInvocations) * 100).toFixed(10) + '% out of 100%',
-    //       );
-    //     }
-    //   }
-    // }
-  };
-
   createImageMetadata = (gene: Gene, edition: number) => {
     let attributes: any[] = [];
 
     this.layers.forEach((layer: Layer, i) => {
-      if (layer.metadata) {
+      if (layer.metadata && gene.sequences[i]) {
         const name = this.layers[gene.sequences[i].layerIndex].name;
         const trait = {
           trait_type: name,
@@ -295,12 +233,11 @@ class Layers {
       `${this.metadataPath}/${edition}.json`,
       JSON.stringify(
         {
-          name: `Lucky Tiger #${edition}`,
-          description:
-            'The Tiger Archives is Tiger Beer and PMC’s first ever NFT collection. The NFTs serve as a lucky charm – giving you blessings and abundance throughout the Tiger year. Owning one unlocks perks throughout the year, from exclusive merch to curated experiences.',
+          name: `Reflection #${edition}`,
+          description: 'The reflection collection.',
           image: `https://rhapsodylabsxyz.sgp1.cdn.digitaloceanspaces.com/tiger/${edition}.png`,
           attributes: attributes,
-          external_url: 'https://thetigerarchives.xyz',
+          external_url: 'https://reflection.dreamlab.art',
         },
         null,
         2,
@@ -440,10 +377,6 @@ class Layers {
     });
     return false;
   }
-
-  generate = (token: Token, invocations: number = 1) => {
-    this.createRandomImages(this.savePath, invocations);
-  };
 }
 
 export class Layer {
@@ -487,13 +420,18 @@ export class Layer {
     return config.traits.map(({ name, weight, link }, index) => {
       return {
         id: index,
-        name: getLayerName(name, rarityDelimiter),
+        name: this.getLayerName(name, rarityDelimiter),
         filename: name,
         path: `${path}${name}`.replace(/(\s+)/g, '$1'),
         weight: weight || 1,
         link: link,
       };
     });
+  };
+
+  getLayerName = (_name: string, rarityDelimiter: string): string => {
+    const isImage = _name.match(/.(jpg|jpeg|png|gif)$/i) !== null;
+    return isImage ? _name.slice(0, -4).split(rarityDelimiter).shift() || '' : _name;
   };
 }
 

@@ -1,17 +1,23 @@
-import { Layers } from './old_index';
-import { imageFormatConfig, layerConfig } from './generator_config';
+import { Generator } from './pkg/generator';
+import { Layers } from './pkg/layer';
+import {
+  GeneratorConfig,
+  LayerElement,
+  GeneSequence,
+  CanvasRenderObject,
+  LayerConfig,
+  ImageFormatConfig,
+  BuildConfig,
+} from './types';
 
-const basePath = process.cwd();
-
-const createImage = (token: any, savePath: string) => {
-  const layers = new Layers(layerConfig, imageFormatConfig, basePath, true);
-  layers.generate(token, 1);
+export {
+  BuildConfig,
+  ImageFormatConfig,
+  LayerConfig,
+  Layers,
+  Generator,
+  GeneratorConfig,
+  LayerElement,
+  GeneSequence,
+  CanvasRenderObject,
 };
-
-(() => {
-  const token = {
-    tokenId: 123,
-    hash: 'some_hash',
-  };
-  createImage(token, basePath);
-})();

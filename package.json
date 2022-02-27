@@ -1,14 +1,14 @@
 {
-  "name": "@rhapsodylabs/rhapsodys",
+  "name": "@rlxyz/compiler",
   "common": {
-    "ethereum": "donations.rhapsodylabs.eth"
+    "ethereum": "rlxyz.eth"
   },
-  "version": "1.0.0",
-  "description": "A generative art compiler for NFT projects",
-  "author": "Rhapsody Labs",
+  "version": "1.0.1",
+  "description": "A library based on Boolean Logic for Generative Art compilatio",
+  "author": "RLXYZ",
   "contributors": [
     {
-      "name": "Jeevan Pillay <jeevan.rhapsodylabs.eth>",
+      "name": "Jeevan Pillay",
       "email": "jeevan@rhapsodylabs.xyz",
       "url": "https://twitter.com/jeevanpillay"
     }
@@ -34,7 +34,7 @@
   "scripts": {
     "prebuild": "rimraf ./build",
     "build": "tsc",
-    "start": "yarn tsc && node build/index.js",
+    "start": "yarn build && node build/index.js",
     "test": "jest",
     "format": "prettier --write \"src/**/*.ts\"",
     "lint": "tslint -p tsconfig.json",
@@ -45,7 +45,8 @@
   },
   "dependencies": {
     "canvas": "^2.8.0",
-    "crypto-js": "^4.1.1"
+    "crypto-js": "^4.1.1",
+    "winston": "^3.6.0"
   },
   "devDependencies": {
     "@types/crypto-js": "^4.1.0",
