@@ -3,8 +3,8 @@
   "common": {
     "ethereum": "rlxyz.eth"
   },
-  "version": "1.0.1",
-  "description": "A library based on Boolean Logic for Generative Art compilatio",
+  "version": "1.0.0",
+  "description": "A library based on Boolean Logic for generative art compilation",
   "author": "RLXYZ",
   "contributors": [
     {
