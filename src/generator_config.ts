@@ -4,16 +4,19 @@ const basePath = process.cwd();
 
 const buildConfig: BuildConfig = {
   basePath: basePath,
-  invocations: 1000,
+  invocations: 2,
   rarityDelimiter: '#',
-  geneDelimiter: '-',
   saveImage: false,
+  geneDelimiter: '-',
 };
 
 const imageFormatConfig: ImageFormatConfig = {
   width: 1420,
   height: 947,
-  smoothing: false,
+  invocations: 1111,
+  rarityDelimiter: '#',
+  geneDelimiter: '-',
+  saveImage: false
 };
 
 const layerConfig: LayerConfig[] = [
