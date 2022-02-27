@@ -1,14 +1,14 @@
 {
-  "name": "@rhapsodylabs/rhapsodys",
+  "name": "@rlxyz/compiler",
   "common": {
-    "ethereum": "donations.rhapsodylabs.eth"
+    "ethereum": "rlxyz.eth"
   },
-  "version": "1.0.0",
-  "description": "A generative art compiler for NFT projects",
-  "author": "Rhapsody Labs",
+  "version": "1.0.1",
+  "description": "A library based on Boolean Logic for Generative Art compilatio",
+  "author": "RLXYZ",
   "contributors": [
     {
-      "name": "Jeevan Pillay <jeevan.rhapsodylabs.eth>",
+      "name": "Jeevan Pillay",
       "email": "jeevan@rhapsodylabs.xyz",
       "url": "https://twitter.com/jeevanpillay"
     }

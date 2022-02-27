@@ -1,13 +1,23 @@
+import { Generator } from './pkg/generator';
 import { Layers } from './pkg/layer';
-import { imageFormatConfig, layerConfig } from './config';
+import {
+  GeneratorConfig,
+  LayerElement,
+  GeneSequence,
+  CanvasRenderObject,
+  LayerConfig,
+  ImageFormatConfig,
+  BuildConfig,
+} from './types';
 
-const basePath = process.cwd();
-
-const createImage = () => {
-  const layers = new Layers(layerConfig, imageFormatConfig, basePath, true);
-  layers.createRandomImages(2);
+export {
+  BuildConfig,
+  ImageFormatConfig,
+  LayerConfig,
+  Layers,
+  Generator,
+  GeneratorConfig,
+  LayerElement,
+  GeneSequence,
+  CanvasRenderObject,
 };
-
-(() => {
-  createImage();
-})();
