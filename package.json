@@ -34,7 +34,7 @@
   "scripts": {
     "prebuild": "rimraf ./build",
     "build": "tsc",
-    "start": "node build/index.js",
+    "start": "yarn tsc && node build/index.js",
     "test": "jest",
     "format": "prettier --write \"src/**/*.ts\"",
     "lint": "tslint -p tsconfig.json",
@@ -44,9 +44,11 @@
     "version": "npm run format && git add ."
   },
   "dependencies": {
-    "canvas": "^2.8.0"
+    "canvas": "^2.8.0",
+    "crypto-js": "^4.1.1"
   },
   "devDependencies": {
+    "@types/crypto-js": "^4.1.0",
     "@types/jest": "^27.0.3",
     "@types/node": "^16.11.11",
     "jest": "^27.0.3",

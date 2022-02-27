@@ -24,6 +24,10 @@ export type LayerConfig = {
   traits: {
     name: string;
     weight: number;
+    link?: {
+      name: string;
+      weight: number;
+    }[];
   }[];
   options?: {
     type?: string;
@@ -32,6 +36,12 @@ export type LayerConfig = {
     exclude?: any;
     combination?: any;
   };
+  linkName?: string;
+  link?: {
+    name: string;
+    weight: number;
+  }[];
+  metadata?: boolean;
 };
 
 export type GeneratorConfig = {
@@ -45,6 +55,12 @@ export type LayerElement = {
   filename: string;
   path: string;
   weight: number;
+  link?: {
+    name: string;
+    weight: number;
+  }[];
+  linkName?: string;
+  linkExtension?: string;
 };
 
 export type GeneSequence = {
@@ -55,4 +71,5 @@ export type GeneSequence = {
 
 export type CanvasRenderObject = {
   image: Image;
+  opacity?: number;
 };

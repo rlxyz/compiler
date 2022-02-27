@@ -23,6 +23,17 @@ export const clearCanvas = (context: NodeCanvasRenderingContext2D, width: number
   context.clearRect(0, 0, width, height);
 };
 
-export const drawImage = (context: NodeCanvasRenderingContext2D, image: Image, width: number, height: number) => {
+export const drawImage = (
+  context: NodeCanvasRenderingContext2D,
+  image: Image,
+  width: number,
+  height: number,
+  opacity?: number,
+) => {
+  // console.log(opacity);
+  if (opacity) {
+    context.globalAlpha = 1;
+    context.globalCompositeOperation = 'multiply';
+  }
   context.drawImage(image, 0, 0, width, height);
 };
