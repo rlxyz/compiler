@@ -34,7 +34,7 @@ class Generator {
       throw new Error("there aren't any layers specified");
     }
 
-    this.layers.createRandomImages(this.buildPath, this.config.build.invocations);
+    this.layers.createRandomImages(this.config.build.invocations);
   }
 }
 

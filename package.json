@@ -45,7 +45,8 @@
   },
   "dependencies": {
     "canvas": "^2.8.0",
-    "crypto-js": "^4.1.1"
+    "crypto-js": "^4.1.1",
+    "winston": "^3.6.0"
   },
   "devDependencies": {
     "@types/crypto-js": "^4.1.0",

@@ -1,27 +1,15 @@
-import { BuildConfig, ImageFormatConfig, LayerConfig, GeneratorConfig } from './types';
-
-const basePath = process.cwd();
-
-const buildConfig: BuildConfig = {
-  basePath: basePath,
-  invocations: 2,
-  rarityDelimiter: '#',
-  saveImage: false,
-  geneDelimiter: '-',
-};
+import { ImageFormatConfig, LayerConfig } from './types';
 
 const imageFormatConfig: ImageFormatConfig = {
   width: 1420,
   height: 947,
-  invocations: 1111,
-  rarityDelimiter: '#',
-  geneDelimiter: '-',
-  saveImage: false
+  smoothing: false,
 };
 
 const layerConfig: LayerConfig[] = [
   {
-    name: '1. SKY',
+    name: 'SKY',
+    metadata: true,
     traits: [
       { name: 'BIG BLUE.png', weight: 50 },
       { name: 'BIG SKY.png', weight: 50 },
@@ -54,7 +42,8 @@ const layerConfig: LayerConfig[] = [
     ],
   },
   {
-    name: '2. BOTTOM LEFT',
+    name: 'BOTTOM LEFT',
+    metadata: true,
     traits: [
       { name: 'autumn.png', weight: 50 },
       { name: 'blue.png', weight: 75 },
@@ -75,7 +64,8 @@ const layerConfig: LayerConfig[] = [
     ],
   },
   {
-    name: '3. BOTTOM RIGHT',
+    name: 'BOTTOM RIGHT',
+    metadata: true,
     traits: [
       { name: 'autumn.png', weight: 50 },
       { name: 'blue.png', weight: 75 },
@@ -96,7 +86,8 @@ const layerConfig: LayerConfig[] = [
     ],
   },
   {
-    name: '4. TOP LEFT',
+    name: 'TOP LEFT',
+    metadata: true,
     traits: [
       { name: 'autumn.png', weight: 50 },
       { name: 'blue.png', weight: 75 },
@@ -117,7 +108,8 @@ const layerConfig: LayerConfig[] = [
     ],
   },
   {
-    name: '5. TOP RIGHT',
+    name: 'TOP RIGHT',
+    metadata: true,
     traits: [
       { name: 'autumn.png', weight: 50 },
       { name: 'blue.png', weight: 75 },
@@ -138,7 +130,8 @@ const layerConfig: LayerConfig[] = [
     ],
   },
   {
-    name: '6. PERSON',
+    name: 'PERSON',
+    metadata: true,
     traits: [
       { name: 'JUMP.png', weight: 30 },
       { name: 'STAND.png', weight: 20 },
@@ -150,7 +143,8 @@ const layerConfig: LayerConfig[] = [
     },
   },
   {
-    name: '7. SPECIAL TOP - EXCLUSION',
+    name: 'SPECIAL TOP - EXCLUSION',
+    metadata: true,
     traits: [{ name: 'lights.png', weight: 1 }],
     options: {
       type: 'EXCLUSION',
@@ -161,7 +155,8 @@ const layerConfig: LayerConfig[] = [
     },
   },
   {
-    name: '8. SPECIAL BOTTOM - EXCLUSION',
+    name: 'SPECIAL BOTTOM - EXCLUSION',
+    metadata: true,
     traits: [
       { name: 'lights.png', weight: 100 },
       { name: 'dry lakebed.png', weight: 25 },
@@ -178,7 +173,8 @@ const layerConfig: LayerConfig[] = [
     },
   },
   {
-    name: '9. SPECIAL BOTTOM - COMBINATION',
+    name: 'SPECIAL BOTTOM - COMBINATION',
+    metadata: true,
     traits: [{ name: 'frozen.png', weight: 50 }],
     options: {
       type: 'COMBINATION',
@@ -190,4 +186,4 @@ const layerConfig: LayerConfig[] = [
   },
 ];
 
-export { imageFormatConfig, buildConfig, layerConfig };
+export { imageFormatConfig, layerConfig };

@@ -30,7 +30,6 @@ export const drawImage = (
   height: number,
   opacity?: number,
 ) => {
-  // console.log(opacity);
   if (opacity) {
     context.globalAlpha = 1;
     context.globalCompositeOperation = 'multiply';
