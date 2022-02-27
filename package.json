@@ -34,7 +34,7 @@
   "scripts": {
     "prebuild": "rimraf ./build",
     "build": "tsc",
-    "start": "node build/index.js",
+    "start": "yarn build && node build/index.js",
     "test": "jest",
     "format": "prettier --write \"src/**/*.ts\"",
     "lint": "tslint -p tsconfig.json",

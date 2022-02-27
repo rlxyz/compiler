@@ -77,13 +77,13 @@ class Layers {
 
     for (let i = 0; i < invocations; i++) {
       const gene: Gene = this.createRandomGene();
-      this.saveImage ? createImage(gene, this.width, this.height, `${basePath}/images/${i}.png`) : null;
+      this.saveImage ? await createImage(gene, this.width, this.height, `${basePath}/${i}.png`) : null;
       const metadata = this.createImageMetadata(gene, i);
       allMetadata.push(metadata);
       allGene.push(gene);
     }
 
-    this.showRarity ? this.calculateRarity(allGene, invocations) : null;
+    this.calculateRarity(allGene, invocations);
   };
 
   calculateRarity = (genes: Gene[], totalInvocations: number) => {
@@ -228,8 +228,8 @@ class Layers {
     return false;
   }
 
-  generate = (token: Token) => {
-    this.createRandomImages(this.savePath, 1);
+  generate = (token: Token, invocation: number = 1) => {
+    this.createRandomImages(this.savePath, invocation);
   };
 }
 
