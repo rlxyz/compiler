@@ -44,11 +44,6 @@ export type LayerConfig = {
   metadata?: boolean;
 };
 
-export type GeneratorConfig = {
-  format: ImageFormatConfig;
-  build: BuildConfig;
-};
-
 export type LayerElement = {
   id: number;
   name: string;
