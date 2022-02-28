@@ -32,12 +32,14 @@ class Layers {
   saveImage: boolean;
   append: boolean;
   metadataPath: string;
+  saveMetadata: boolean;
 
   constructor(
     configs: LayerConfig[],
     imageFormat: ImageFormatConfig,
     basePath: string,
     saveImage?: boolean,
+    saveMetadata?: boolean,
     rarityDelimiter?: string,
     geneDelimiter?: string,
     append?: boolean,
@@ -62,6 +64,7 @@ class Layers {
     this.width = imageFormat.width;
     this.height = imageFormat.height;
     this.saveImage = saveImage || false;
+    this.saveMetadata = saveMetadata || false;
     this.rarityDelimiter = rarityDelimiter || '#';
     this.geneDelimiter = geneDelimiter || '-';
     this.append = true;
@@ -85,6 +88,16 @@ class Layers {
     return files.length > 0 ? Number(files[0].file.slice(0, -4)) : 0;
   };
 
+  createImageFromHash = async (tokenId: number, tokenHash: string) => {
+    // todo: use tokenHash instead of mock gene
+    const gene: Gene = this.createRandomGene();
+    if (this.saveImage) {
+      await createImage(gene, this.width, this.height, `${this.savePath}/${tokenId}.png`);
+    }
+    const metadata: { name: string; attributes: any[] } = this.createImageMetadata(gene, tokenId);
+    return metadata;
+  };
+
   createRandomImages = async (invocations: number) => {
     const allHash = new Set();
     const allAttributes = [];
@@ -97,8 +110,8 @@ class Layers {
       if (this.saveImage) {
         await createImage(gene, this.width, this.height, `${this.savePath}/${i}.png`);
       }
-      const attributes: any[] = this.createImageMetadata(gene, i);
-
+      const metadata: { name: string; attributes: any[] } = this.createImageMetadata(gene, i);
+      const { attributes } = metadata;
       const hash: string = sha256(
         attributes
           .map((attr) => {
@@ -207,7 +220,7 @@ class Layers {
     // console.log(rank);
   };
 
-  createImageMetadata = (gene: Gene, edition: number) => {
+  createImageMetadata = (gene: Gene, edition: number): { name: string; attributes: any[] } => {
     let attributes: any[] = [];
 
     this.layers.forEach((layer: Layer, i) => {
@@ -229,22 +242,16 @@ class Layers {
       }
     });
 
-    fs.writeFileSync(
-      `${this.metadataPath}/${edition}.json`,
-      JSON.stringify(
-        {
-          name: `Reflection #${edition}`,
-          description: 'The reflection collection.',
-          image: `https://rhapsodylabsxyz.sgp1.cdn.digitaloceanspaces.com/tiger/${edition}.png`,
-          attributes: attributes,
-          external_url: 'https://reflection.dreamlab.art',
-        },
-        null,
-        2,
-      ),
-    );
+    const metadata = {
+      name: `Reflection #${edition}`,
+      attributes: attributes,
+    };
 
-    return attributes;
+    if (this.saveMetadata) {
+      fs.writeFileSync(`${this.metadataPath}/${edition}.json`, JSON.stringify(metadata, null, 2));
+    }
+
+    return metadata;
   };
 
   createRandomGene(): Gene {
