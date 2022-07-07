@@ -1,0 +1,6 @@
+export NEXT_PUBLIC_S3_API_KEY=
+export NEXT_PUBLIC_S3_REGION=us-east-1
+export NEXT_PUBLIC_S3_SECRET_KEY=
+export NEXT_PUBLIC_S3_ENDPOINT=https://nyc3.digitaloceanspaces.com
+export NEXT_PUBLIC_S3_BUCKET=rlwxyz
+export NEXT_PUBLIC_S3_FOLDER_NAME=

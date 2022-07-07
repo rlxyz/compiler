@@ -1,0 +1,38 @@
+@font-face {
+  font-family: "Gilroy-Light";
+  src: url("fonts/Gilroy/GilroyLight/font.woff2") format("woff2"),
+    url("fonts/Gilroy/GilroyLight/font.woff") format("woff");
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Gilroy-UltraLight";
+  src: url("fonts/Gilroy/GilroyUltraLight/font.woff2") format("woff2"),
+    url("fonts/Gilroy/GilroyUltraLight/font.woff") format("woff");
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Gilroy-ExtraBold";
+  src: url("fonts/Gilroy/GilroyExtraBold/font.woff2") format("woff2"),
+    url("fonts/Gilroy/GilroyExtraBold/font.woff") format("woff");
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Kiona-Bold";
+  src: url("fonts/Kiona/Kiona-Bold.ttf") format("truetype");
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Kiona-Regular";
+  src: url("fonts/Kiona/Kiona-Regular.ttf") format("truetype");
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Kiona-Light";
+  src: url("fonts/Kiona/Kiona-Light.ttf") format("truetype");
+  font-display: swap;
+}
