@@ -30,9 +30,6 @@ export const drawImage = (
   height: number,
   opacity?: number,
 ) => {
-  if (opacity) {
-    context.globalAlpha = 1;
-    context.globalCompositeOperation = 'multiply';
-  }
+  opacity && ((context.globalAlpha = 1), (context.globalCompositeOperation = 'multiply'));
   context.drawImage(image, 0, 0, width, height);
 };

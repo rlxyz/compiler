@@ -1,4 +1,4 @@
-import { Layer, Layers } from './pkg/layer';
+import { Layers } from './x/layers';
 import { LayerElement, GeneSequence, CanvasRenderObject, LayerConfig, ImageFormatConfig, BuildConfig } from './types';
 
 // export { BuildConfig, ImageFormatConfig, LayerConfig, Layers, LayerElement, GeneSequence, CanvasRenderObject };
@@ -8,10 +8,6 @@ const layerConfig: LayerConfig[] = [
     name: '1. Background',
     metadata: true,
     traits: [
-      {
-        name: 'Graffiti-Foil',
-        weight: 8,
-      },
       {
         name: 'Prism',
         weight: 10,
@@ -33,6 +29,10 @@ const layerConfig: LayerConfig[] = [
         weight: 35,
       },
       {
+        name: 'Cloudy',
+        weight: 40,
+      },
+      {
         name: 'Carnage-Yellow',
         weight: 50,
       },
@@ -42,6 +42,10 @@ const layerConfig: LayerConfig[] = [
       },
       {
         name: 'Carnage-Blue',
+        weight: 50,
+      },
+      {
+        name: 'Carnage-Purple',
         weight: 50,
       },
       {
@@ -79,13 +83,17 @@ const layerConfig: LayerConfig[] = [
         weight: 30,
       },
       {
-        name: 'LEVATRON',
-        weight: 50,
+        name: 'Bubbles',
+        weight: 35,
       },
-      // {
-      //   name: 'NONE',
-      //   weight: 300,
-      // },
+      {
+        name: 'LEVATRON',
+        weight: 60,
+      },
+      {
+        name: 'NONE',
+        weight: 325,
+      },
     ],
   },
   {
@@ -139,6 +147,10 @@ const layerConfig: LayerConfig[] = [
         weight: 15,
       },
       {
+        name: 'Goldenrods',
+        weight: 17,
+      },
+      {
         name: 'Cape',
         weight: 20,
       },
@@ -159,13 +171,17 @@ const layerConfig: LayerConfig[] = [
         weight: 50,
       },
       {
+        name: 'Old Fashioned',
+        weight: 50,
+      },
+      {
         name: 'Power Cords',
         weight: 50,
       },
-      // {
-      //   name: 'NONE',
-      //   weight: 300,
-      // },
+      {
+        name: 'NONE',
+        weight: 300,
+      },
     ],
   },
   {
@@ -259,6 +275,10 @@ const layerConfig: LayerConfig[] = [
         weight: 40,
       },
       {
+        name: 'Armour Gloves',
+        weight: 38,
+      },
+      {
         name: 'KISS GLOVES',
         weight: 40,
       },
@@ -286,10 +306,10 @@ const layerConfig: LayerConfig[] = [
         name: 'BLACK GLOVES',
         weight: 50,
       },
-      // {
-      //   name: 'NONE',
-      //   weight: 100,
-      // },
+      {
+        name: 'NONE',
+        weight: 100,
+      },
     ],
   },
   {
@@ -407,8 +427,8 @@ const layerConfig: LayerConfig[] = [
         weight: 25,
       },
       {
-        name: 'GRAFFITI NOISE',
-        weight: 26,
+        name: 'Camo',
+        weight: 28,
       },
       {
         name: 'GRAFFITI BOT CARAMEL',
@@ -530,24 +550,32 @@ const layerConfig: LayerConfig[] = [
       },
       {
         name: 'PLASMA',
+        weight: 42,
+      },
+      {
+        name: '1992 Golden',
+        weight: 43,
+      },
+      {
+        name: '1992',
         weight: 45,
       },
       {
-        name: 'POWER PLASMA',
+        name: 'Power Plasma',
         weight: 46,
       },
       {
-        name: 'STEEL TIGER',
+        name: 'Yo',
         weight: 47,
       },
       {
         name: 'TARZAN',
         weight: 48,
       },
-      // {
-      //   name: 'NONE',
-      //   weight: 100,
-      // },
+      {
+        name: 'NONE',
+        weight: 100,
+      },
     ],
   },
   {
@@ -575,6 +603,10 @@ const layerConfig: LayerConfig[] = [
         weight: 20,
       },
       {
+        name: '1992',
+        weight: 25,
+      },
+      {
         name: 'NELLY',
         weight: 30,
       },
@@ -586,10 +618,10 @@ const layerConfig: LayerConfig[] = [
         name: 'SCARS',
         weight: 50,
       },
-      // {
-      //   name: 'NONE',
-      //   weight: 100,
-      // },
+      {
+        name: 'NONE',
+        weight: 150,
+      },
     ],
   },
   {
@@ -809,6 +841,10 @@ const layerConfig: LayerConfig[] = [
         weight: 42,
       },
       {
+        name: 'GUMBALL',
+        weight: 43,
+      },
+      {
         name: 'ROBOCAP',
         weight: 44,
       },
@@ -834,15 +870,15 @@ const layerConfig: LayerConfig[] = [
       },
       {
         name: 'HALO GOLD',
-        weight: 58,
+        weight: 60,
       },
       {
         name: 'HALO SILVER',
-        weight: 58,
+        weight: 63,
       },
       {
         name: 'HALO BRONZE',
-        weight: 58,
+        weight: 65,
       },
     ],
   },
@@ -852,6 +888,6 @@ const basePath = process.cwd();
 
 const imageFormatConfig: ImageFormatConfig = { width: 1500, height: 1500, smoothing: false };
 
-const layer: Layers = new Layers(layerConfig, imageFormatConfig, basePath, true);
+const layer: Layers = new Layers(layerConfig, imageFormatConfig, basePath, false, false);
 
-layer.createRandomImages(1000);
+layer.createRandomImages(5000);

@@ -1,29 +1,17 @@
 import fs from 'fs';
 import { ImageFormatConfig, LayerConfig, Token } from '../types';
-import { CanvasObject, clearCanvas, createCanvas, drawImage, saveImage } from './canvas';
-import { LAYER_TYPES } from '../constants/layer';
 import { Gene } from './gene';
-import { CanvasRenderObject, GeneSequence, LayerElement } from '../types';
+import { GeneSequence, LayerElement } from '../types';
 import path from 'path';
 import sha256 from 'crypto-js/sha256';
-
-const createImage = async (gene: Gene, width: number, height: number, savePath: string) => {
-  const { canvas, context }: CanvasObject = createCanvas(width, height);
-  const loadedImages: Promise<CanvasRenderObject>[] = gene.loadImages();
-  await Promise.all(loadedImages).then((render: CanvasRenderObject[]) => {
-    clearCanvas(context, width, height);
-    render.forEach((object: CanvasRenderObject) => {
-      drawImage(context, object.image, width, height); // todo: fix
-    });
-    saveImage(canvas, savePath);
-  });
-};
+import { createImage } from './image';
+import Layer from './layer';
 
 class Layers {
   layers: Layer[];
   width: number;
   height: number;
-  layerPath: string;
+  layersPath: string;
   rarityDelimiter: string;
   geneDelimiter: string;
   savePath: string;
@@ -47,9 +35,9 @@ class Layers {
       throw new Error('configs failed with length 0');
     }
 
-    this.layerPath = basePath + '/layers';
+    this.layersPath = basePath + '/layers';
 
-    if (!fs.existsSync(this.layerPath)) {
+    if (!fs.existsSync(this.layersPath)) {
       throw new Error('layerPath invalid');
     }
 
@@ -67,7 +55,7 @@ class Layers {
     this.rarityDelimiter = rarityDelimiter || '#';
     this.geneDelimiter = geneDelimiter || '-';
     this.append = true;
-    this.layers = configs.map((config: LayerConfig) => new Layer(config, this.layerPath, this.rarityDelimiter));
+    this.layers = configs.map((config: LayerConfig) => new Layer(config, `${this.layersPath}/${config.name}`));
   }
 
   get(index: number) {
@@ -129,93 +117,78 @@ class Layers {
   };
 
   calculateRarityAttributes = (data: any[]) => {
-    const totalInvocations = data.length;
     let traits: any = {};
-    for (var d of data) {
-      for (var attr of d) {
-        const type = attr['trait_type'];
-        const value = attr['value'];
-
-        if (!traits[type]) {
-          traits[type] = {};
-        }
-
-        if (!traits[type][value]) {
-          traits[type][value] = 1;
-        } else {
-          traits[type][value] += 1;
-        }
+    for (var item of data) {
+      for (var attributes of item) {
+        const { trait_type: type, value } = attributes;
+        !traits[type] && (traits[type] = {});
+        !traits[type][value] ? (traits[type][value] = 1) : traits[type][value]++;
       }
     }
 
-    const distributon = {};
-
-    for (const trait of Object.entries(traits)) {
-      const attributes = trait[1];
-      console.log(trait[0]);
-      // @ts-ignore
-      for (const [trait, value] of Object.entries(attributes)) {
-        console.log(trait, ((Number(value) / totalInvocations) * 100).toFixed(4) + '% out of 100%');
+    let upperBound = 0;
+    let total = 0;
+    for (const [_, value] of Object.entries(traits)) {
+      for (const [_, entry] of Object.entries(value)) {
+        entry > upperBound && (upperBound = entry); // todo: move to own function
+        total += entry;
       }
-      console.log('==========================================');
     }
 
-    // let upperBound = 0;
-    // let total = 0;
-    // for (const trait of Object.entries(traits)) {
-    //   const attributes = trait[1];
-    //   // @ts-ignore
-    //   for (const attr of Object.entries(attributes)) {
-    //     const entry = attr[1];
+    for (const [type, value] of Object.entries(traits)) {
+      traits[type] = Object.entries(value)
+        // @ts-ignore
+        .sort(([, v1], [, v2]) => v1 - v2)
+        .reduce(
+          (obj, [k, v]) => ({
+            ...obj,
+            [k]: v,
+          }),
+          {},
+        );
+    }
 
-    //     // @ts-ignore
-    //     if (entry > upperBound) {
-    //       // @ts-ignore
-    //       upperBound = entry;
-    //     }
-    //     // @ts-ignore
-    //     total += entry;
-    //   }
-    // }
+    const type: any = 'rankings-trait';
+    switch (type) {
+      case 'light':
+        return console.log({ traits });
+      case 'full':
+        // Get Rarity Rating for each type-attribute
+        for (const [type, value] of Object.entries(traits)) {
+          for (const [attribute, attribute_value] of Object.entries(value)) {
+            traits[type][attribute] = {
+              value: attribute_value,
+              rating: upperBound / attribute_value,
+            };
+          }
+        }
 
-    // console.log(upperBound, total);
+        return console.log({
+          traits,
+        });
+      case 'rankings-trait':
+        let allTraitsWithRarity = [];
+        for (const [type, value] of Object.entries(traits)) {
+          for (const [attribute, attribute_value] of Object.entries(value)) {
+            traits[type][attribute] = {
+              value: attribute_value,
+              rating: upperBound / attribute_value,
+            };
+            allTraitsWithRarity.push({
+              trait_type: type,
+              value: value,
+              count: attribute,
+              ...traits[type][attribute],
+            });
+          }
+        }
 
-    // for (const trait of Object.entries(traits)) {
-    //   const type = trait[0];
-    //   const attributes = trait[1];
-    //   // @ts-ignore
-    //   for (const attr of Object.entries(attributes)) {
-    //     traits[type][attr[0]] = {
-    //       value: attr[1],
-    //       // @ts-ignore
-    //       rating: upperBound / attr[1],
-    //     };
-    //   }
-    // }
+        allTraitsWithRarity.sort(function (a, b) {
+          return b.rating - a.rating;
+        });
 
-    // // ((layerRarity[layer][attribute].occurance / totalInvocations) * 100).toFixed(10) + '% out of 100%',
-
-    // console.log(traits);
-
-    // let rank = [];
-    // for (var j = 0; j < data.length; j++) {
-    //   let rarityValue = 0;
-    //   try {
-    //     for (var attr of data[j]) {
-    //       let type, value;
-    //       type = attr['trait_type'];
-    //       value = attr['value'];
-    //       const { rating } = traits[type][value];
-    //       rarityValue += rating / upperBound;
-    //     }
-    //   } catch (e) {}
-    //   rank[j] = {
-    //     tokenId: j,
-    //     rarity: rarityValue,
-    //   };
-    // }
-
-    // console.log(rank);
+        return console.log(allTraitsWithRarity);
+    }
   };
 
   createImageMetadata = (gene: Gene, edition: number): { name: string; attributes: any[] } => {
@@ -382,66 +355,6 @@ class Layers {
     });
     return false;
   }
-}
-
-export class Layer {
-  name: string;
-  elements: LayerElement[];
-  iterations: number;
-  occuranceRate: number;
-  type?: string;
-  combination?: any;
-  exclude?: any;
-  link?: any;
-  metadata: boolean;
-  linkName?: string;
-
-  // todo: fix rarityDelimter being passed multiple times
-  // todo: fix type name checking conmbination and exclude properties
-  constructor(config: LayerConfig, layerPath: string, rarityDelimiter: string) {
-    if (!config.name || config.name.length == 0) {
-      throw new Error("layer name doesn't exists");
-    }
-
-    this.name = config.name;
-    this.elements = this.getLayerElements(`${layerPath}/${this.name}/`, rarityDelimiter, config);
-    this.iterations = config.options?.iterations || 1;
-    this.occuranceRate = config.options?.occuranceRate || 1;
-    this.type = config.options?.type || LAYER_TYPES.NORMAL;
-    this.link = config?.link || undefined;
-    this.linkName = config?.linkName || undefined;
-    this.metadata = config?.metadata || false;
-
-    if (config.options?.combination != undefined) {
-      this.combination = config.options.combination;
-    }
-
-    if (config.options?.exclude != undefined) {
-      this.exclude = config.options.exclude;
-    }
-  }
-
-  getLayerElements = (path: string, rarityDelimiter: string, config: LayerConfig): LayerElement[] => {
-    return config.traits.map(({ name, weight, link }, index) => {
-      return {
-        id: index,
-        name: this.getLayerName(name, rarityDelimiter),
-        filename: name,
-        path: `${path}${name
-          .toLowerCase()
-          .replace(/(\s+)/g, '-')
-          .replace(new RegExp(/\s+(.)(\w*)/, 'g'), ($1, $2, $3) => `${$2.toUpperCase() + $3}`)
-          .replace(new RegExp(/\w/), (s) => s.toUpperCase())}${'.png'}`,
-        weight: weight || 1,
-        link: link,
-      };
-    });
-  };
-
-  getLayerName = (_name: string, rarityDelimiter: string): string => {
-    const isImage = _name.match(/.(jpg|jpeg|png|gif)$/i) !== null;
-    return isImage ? _name.slice(0, -4).split(rarityDelimiter).shift() || '' : _name;
-  };
 }
 
 export { Layers };
