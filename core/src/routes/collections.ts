@@ -1,5 +1,10 @@
-import { Layers } from './x/layers';
-import { LayerElement, GeneSequence, CanvasRenderObject, LayerConfig, ImageFormatConfig, BuildConfig } from './types';
+import express, { Router } from 'express';
+import { ImageFormatConfig, LayerConfig } from '../types';
+import { Layers } from '../x/layers';
+
+const router: Router = express.Router();
+
+const allowlist = ['roboghost'];
 
 const layerConfig: LayerConfig[] = [
   {
@@ -884,8 +889,57 @@ const layerConfig: LayerConfig[] = [
 
 const basePath = process.cwd();
 
-const imageFormatConfig: ImageFormatConfig = { width: 1500, height: 1500, smoothing: false };
+const imageFormatConfig: ImageFormatConfig = {
+  width: 1500,
+  height: 1500,
+  smoothing: false,
+};
 
 const layer: Layers = new Layers(layerConfig, imageFormatConfig, basePath, false, false);
 
-layer.createRandomImages(5555);
+router.get('/:username/generate/random', async (req, res) => {
+  const { username } = req.params;
+  if (!allowlist.includes(username)) {
+    return res.status(400).send({
+      error: 'AllowlistValidationError',
+      message: 'Collection not in allowlist',
+    });
+  }
+
+  try {
+    const imageBuffer = await layer.createRandomImageBuffer();
+    return res.setHeader('Content-Type', 'image/png').send(imageBuffer);
+  } catch (err) {
+    return res.status(400).send({
+      error: 'ImageGenerationError]',
+      message: 'Generation of the image failed',
+    });
+  }
+});
+
+router.get('/:username/generate/rarity/:type', async (req, res) => {
+  const { username, type } = req.params;
+  if (!allowlist.includes(username)) {
+    return res.status(400).send({
+      error: 'AllowlistValidationError',
+      message: 'Collection not in allowlist',
+    });
+  }
+
+  const layer: Layers = new Layers(layerConfig, imageFormatConfig, basePath, false, false);
+
+  switch (type) {
+    case 'light':
+      return res.status(200).send(await layer.createRandomImages(5555, type));
+    case 'full':
+      return res.status(200).send(await layer.createRandomImages(5555, type));
+    case 'rankings-trait':
+      return res.status(200).send(await layer.createRandomImages(5555, type));
+    case 'rankings-token':
+      return res.status(200).send(await layer.createRandomImages(5555, type));
+    default:
+      return res.status(400).send({ error: 'InvalidTypeError', message: 'Invalid type' });
+  }
+});
+
+export default router;

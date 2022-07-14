@@ -1,0 +1,27 @@
+export CONTRACT_ADDRESS=
+export ETH_JSON_RPC_PROVIDER=http://127.0.0.1:8545
+
+export PINATA_JWT=
+export PINATA_API_KEY=
+export PINATA_SECRET_KEY=
+
+export NODE_ENV=development
+export CONTRACT_ENV=development
+
+export STORAGE_SERVICE=s3   # s3 or pinata
+export STORAGE_URL=https://rlwxyz.nyc3.cdn.digitaloceanspaces.com
+
+export S3_API_KEY=
+export S3_SECRET_KEY=
+export S3_ENDPOINT=https://nyc3.digitaloceanspaces.com
+export S3_REGION=us-east-1
+export S3_BUCKET=rlwxyz
+export S3_FOLDER_NAME=
+
+export WATCHER_MODULO_RESULT=
+export WATCHER_NUM_PROCESSES=5
+
+export ROLLBAR_ACCESS_TOKEN=
+
+export IMAGE_GENERATE_URL=
+export COLLECTION_NAME=

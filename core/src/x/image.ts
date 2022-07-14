@@ -2,7 +2,7 @@ import { CanvasObject, clearCanvas, createCanvas, drawImage, saveImage } from '.
 import { Gene } from './gene';
 import { CanvasRenderObject } from '../types';
 
-export const createImage = async (gene: Gene, width: number, height: number, savePath: string) => {
+export const createImage = async (gene: Gene, width: number, height: number, savePath: string): Promise<Buffer> => {
   const { canvas, context }: CanvasObject = createCanvas(width, height);
   const loadedImages: Promise<CanvasRenderObject>[] = gene.loadImages();
   await Promise.all(loadedImages).then((render: CanvasRenderObject[]) => {
@@ -12,4 +12,5 @@ export const createImage = async (gene: Gene, width: number, height: number, sav
     });
     saveImage(canvas, savePath);
   });
+  return canvas.toBuffer();
 };

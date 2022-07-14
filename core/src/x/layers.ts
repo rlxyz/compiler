@@ -54,7 +54,7 @@ class Layers {
     this.saveMetadata = saveMetadata || false;
     this.rarityDelimiter = rarityDelimiter || '#';
     this.geneDelimiter = geneDelimiter || '-';
-    this.append = true;
+    this.append = append || false;
     this.layers = configs.map((config: LayerConfig) => new Layer(config, `${this.layersPath}/${config.name}`));
   }
 
@@ -85,9 +85,13 @@ class Layers {
     return metadata;
   };
 
-  createRandomImages = async (invocations: number) => {
+  createRandomImages = async (
+    invocations: number,
+    rarityQueryType: 'light' | 'full' | 'rankings-trait' | 'rankings-token' = 'light',
+  ) => {
     const allHash = new Set();
-    const allAttributes = [];
+    const tokens = [];
+    const data = [];
 
     let startPoint = this.getAppendFileStart() + 1;
     for (var i = startPoint; i < invocations + startPoint; ) {
@@ -98,6 +102,7 @@ class Layers {
       }
       const metadata: { name: string; attributes: any[] } = this.createImageMetadata(gene, i);
       const { attributes } = metadata;
+
       const hash: string = sha256(
         attributes
           .map((attr) => {
@@ -109,14 +114,24 @@ class Layers {
       if (!allHash.has(hash)) {
         i++;
         allHash.add(hash);
-        allAttributes.push(attributes);
+        tokens.push({ attributes: attributes, token_hash: hash });
+        data.push(attributes);
       }
     }
 
-    this.calculateRarityAttributes(allAttributes);
+    return this.calculateRarityAttributes(tokens, data, rarityQueryType);
   };
 
-  calculateRarityAttributes = (data: any[]) => {
+  createRandomImageBuffer = async (): Promise<Buffer> => {
+    const gene: Gene = this.createRandomGene();
+    return await createImage(gene, this.width, this.height, `${this.savePath}/${-1}.png`);
+  };
+
+  calculateRarityAttributes = (
+    tokens: any[],
+    data: any[],
+    type: 'light' | 'full' | 'rankings-trait' | 'rankings-token',
+  ) => {
     let traits: any = {};
     for (var item of data) {
       for (var attributes of item) {
@@ -148,10 +163,10 @@ class Layers {
         );
     }
 
-    const type: any = 'rankings-trait';
+    // todo: modularise this
     switch (type) {
       case 'light':
-        return console.log({ traits });
+        return traits;
       case 'full':
         // Get Rarity Rating for each type-attribute
         for (const [type, value] of Object.entries(traits)) {
@@ -163,9 +178,8 @@ class Layers {
           }
         }
 
-        return console.log({
-          traits,
-        });
+        return traits;
+
       case 'rankings-trait':
         let allTraitsWithRarity = [];
         for (const [type, value] of Object.entries(traits)) {
@@ -187,7 +201,61 @@ class Layers {
           return b.rating - a.rating;
         });
 
-        return console.log(allTraitsWithRarity);
+        return allTraitsWithRarity;
+
+      case 'rankings-token':
+        // Get Rarity Rating for each type-attribute
+        for (const [type, value] of Object.entries(traits)) {
+          for (const [attribute, attribute_value] of Object.entries(value)) {
+            traits[type][attribute] = {
+              value: attribute_value,
+              rating: upperBound / attribute_value,
+            };
+          }
+        }
+
+        let rank = [];
+        for (var j = 0; j < 5555; j++) {
+          let rarityValue = 0;
+          for (const item of tokens[j]['attributes']) {
+            const { trait_type, value } = item;
+            rarityValue += traits[trait_type][value]['rating'];
+          }
+          rank.push(rarityValue);
+        }
+
+        var mapped = rank
+          .map(function (el, i) {
+            return { token_id: i, rarity: el };
+          })
+          .sort(function (a, b) {
+            return b.rarity - a.rarity;
+          });
+
+        return {
+          rankings: mapped.slice(0, 20).map((token: { token_id: number; rarity: number }, index) => {
+            const { token_id } = token;
+            return {
+              rank: index + 1,
+              header: {
+                token_id: token_id,
+                token_hash: tokens[token_id]['token_hash'],
+                image_url: `${process.env.IMAGE_GENERATE_URL}/${tokens[token_id]['token_hash']}`,
+                total_rating: token.rarity,
+              },
+              traits: tokens[token_id]['attributes'].map((attribute: any) => {
+                const { trait_type, value } = attribute;
+                return {
+                  trait_type: trait_type,
+                  value: value,
+                  rating: traits[trait_type][value]['rating'],
+                };
+              }),
+            };
+          }),
+        };
+      default:
+        return traits;
     }
   };
 
@@ -214,7 +282,7 @@ class Layers {
     });
 
     const metadata = {
-      name: `Reflection #${edition}`,
+      name: `${process.env.COLLECTION_NAME} #${edition}`,
       attributes: attributes,
     };
 
