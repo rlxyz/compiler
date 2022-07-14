@@ -1,5 +1,5 @@
 import fs from 'fs';
-import { ImageFormatConfig, LayerConfig, Token } from '../types';
+import { CollectionAnalyticsType, ImageFormatConfig, LayerConfig, Token } from '../types';
 import { Gene } from './gene';
 import { GeneSequence, LayerElement } from '../types';
 import path from 'path';
@@ -7,7 +7,7 @@ import sha256 from 'crypto-js/sha256';
 import { createImage } from './image';
 import Layer from './layer';
 
-class Layers {
+class ImageCompiler {
   layers: Layer[];
   width: number;
   height: number;
@@ -85,10 +85,7 @@ class Layers {
     return metadata;
   };
 
-  createRandomImages = async (
-    invocations: number,
-    rarityQueryType: 'light' | 'full' | 'rankings-trait' | 'rankings-token' = 'light',
-  ) => {
+  createRandomImages = async (invocations: number) => {
     const allHash = new Set();
     const tokens = [];
     const data = [];
@@ -96,10 +93,7 @@ class Layers {
     let startPoint = this.getAppendFileStart() + 1;
     for (var i = startPoint; i < invocations + startPoint; ) {
       const gene: Gene = this.createRandomGene();
-
-      if (this.saveImage) {
-        await createImage(gene, this.width, this.height, `${this.savePath}/${i}.png`);
-      }
+      this.saveImage && (await createImage(gene, this.width, this.height, `${this.savePath}/${i}.png`));
       const metadata: { name: string; attributes: any[] } = this.createImageMetadata(gene, i);
       const { attributes } = metadata;
 
@@ -119,7 +113,7 @@ class Layers {
       }
     }
 
-    return this.calculateRarityAttributes(tokens, data, rarityQueryType);
+    return { tokens, data };
   };
 
   createRandomImageBuffer = async (): Promise<Buffer> => {
@@ -127,11 +121,7 @@ class Layers {
     return await createImage(gene, this.width, this.height, `${this.savePath}/${-1}.png`);
   };
 
-  calculateRarityAttributes = (
-    tokens: any[],
-    data: any[],
-    type: 'light' | 'full' | 'rankings-trait' | 'rankings-token',
-  ) => {
+  calculateRarityAttributes = (tokens: any[], data: any[], type: CollectionAnalyticsType) => {
     let traits: any = {};
     for (var item of data) {
       for (var attributes of item) {
@@ -240,7 +230,7 @@ class Layers {
               header: {
                 token_id: token_id,
                 token_hash: tokens[token_id]['token_hash'],
-                image_url: `${process.env.IMAGE_GENERATE_URL}/${tokens[token_id]['token_hash']}`,
+                // image_url: `${process.env.IMAGE_GENERATE_URL}/${tokens[token_id]['token_hash']}`,
                 total_rating: token.rarity,
               },
               traits: tokens[token_id]['attributes'].map((attribute: any) => {
@@ -425,4 +415,4 @@ class Layers {
   }
 }
 
-export { Layers };
+export { ImageCompiler };

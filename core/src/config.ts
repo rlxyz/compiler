@@ -1,7 +1,6 @@
-import { LayerElement, GeneSequence, CanvasRenderObject, LayerConfig, ImageFormatConfig, BuildConfig } from './types';
-import { ImageCompiler } from './x/compiler';
+import { ImageFormatConfig, LayerConfig } from './types';
 
-const layerConfig: LayerConfig[] = [
+export const layerConfig: LayerConfig[] = [
   {
     name: '1. Background',
     metadata: true,
@@ -882,10 +881,8 @@ const layerConfig: LayerConfig[] = [
   },
 ];
 
-const basePath = process.cwd();
-
-const imageFormatConfig: ImageFormatConfig = { width: 1500, height: 1500, smoothing: false };
-
-const layer: ImageCompiler = new ImageCompiler(layerConfig, imageFormatConfig, basePath, false, false);
-
-layer.createRandomImages(5555);
+export const imageFormatConfig: ImageFormatConfig = {
+  width: 1500,
+  height: 1500,
+  smoothing: false,
+};

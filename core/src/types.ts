@@ -5,6 +5,8 @@ export type Token = {
   hash: string;
 };
 
+export type CollectionAnalyticsType = 'light' | 'full' | 'rankings-trait' | 'rankings-token';
+
 export type BuildConfig = {
   basePath: string;
   invocations: number;
