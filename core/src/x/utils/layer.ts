@@ -1,5 +1,4 @@
-import { LayerConfig } from '../types';
-import { LayerElement } from '../types';
+import { LayerConfig, LayerElement } from '../../types';
 
 export const LAYER_TYPES = {
   NORMAL: 'NORMAL',

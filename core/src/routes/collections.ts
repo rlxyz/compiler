@@ -1,7 +1,7 @@
 import express, { Router } from 'express';
 import { imageFormatConfig, layerConfig } from '../config';
 import { CollectionAnalyticsType, ImageFormatConfig, LayerConfig } from '../types';
-import { ImageCompiler } from '../x/compiler';
+import { Generator } from '../x/Generator';
 
 const router: Router = express.Router();
 const allowlist = ['roboghost']; // todo: move to db
@@ -35,8 +35,12 @@ router.get(
   '/:username/generate/random',
   collectionMiddleware,
   async (request: express.Request, response: express.Response) => {
-    const layer: ImageCompiler = new ImageCompiler(layerConfig, imageFormatConfig, basePath, false, false);
-    const imageBuffer = await layer.createRandomImageBuffer();
+    const app: Generator = new Generator({
+      configs: layerConfig,
+      imageFormat: imageFormatConfig,
+      basePath,
+    });
+    const imageBuffer = (await app.createElementFromRandomness()).toBuffer();
     return response.status(200).setHeader('Content-Type', 'image/png').send(imageBuffer);
   },
 );
@@ -46,9 +50,13 @@ router.get(
   collectionMiddleware,
   async (request: express.Request, response: express.Response) => {
     const type: CollectionAnalyticsType = request.params.type as CollectionAnalyticsType;
-    const layers: ImageCompiler = new ImageCompiler(layerConfig, imageFormatConfig, basePath, false, false);
-    const { tokens, data } = await layers.createRandomImages(5555);
-    return response.status(200).send(layers.calculateRarityAttributes(tokens, data, type));
+    const app: Generator = new Generator({
+      configs: layerConfig,
+      imageFormat: imageFormatConfig,
+      basePath,
+    });
+    const { tokens, data } = await app.createRandomCollection({ totalSupply: 5555, savePath: '' });
+    return response.status(200).send(Generator.calculateRarityAttributes(tokens, data, type));
   },
 );
 

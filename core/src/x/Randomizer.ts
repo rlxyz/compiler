@@ -1,9 +1,10 @@
+import { Element } from './utils/element';
 import { GeneSequence } from '../types';
-import Layer from './layer';
-import { ImageCompiler } from './compiler';
+import Layer from './utils/layer';
+import { Sequencer } from './Sequencer';
 
-export class GeneticSequenceRandomizer {
-  public static Run = (layers: Layer[]): GeneSequence[] => {
+export class Randomizer {
+  public static Run = (layers: Layer[]): Element => {
     let sequences: GeneSequence[] = [];
     layers.forEach((layer: Layer, index: number) => {
       const { weight, iterations, occuranceRate, elements, link } = layer;
@@ -15,8 +16,10 @@ export class GeneticSequenceRandomizer {
         let random = Math.floor(Math.random() * weight);
 
         for (var i = 0; i < elements.length; i++) {
-          if (ImageCompiler.layerElementHasCombination(layers, layer, i, sequences) ||
-            ImageCompiler.layerElementHasExclusion(layers, layer, i, sequences)) {
+          if (
+            Sequencer.layerElementHasCombination(layers, layer, i, sequences) ||
+            Sequencer.layerElementHasExclusion(layers, layer, i, sequences)
+          ) {
             continue;
           }
 
@@ -25,7 +28,7 @@ export class GeneticSequenceRandomizer {
             let element = layers[index].elements.find((e) => e.id == elements[i].id);
 
             if (element?.link !== undefined) {
-              let randomLink = Math.floor(Math.random() * ImageCompiler.elementLinkWeight(element));
+              let randomLink = Math.floor(Math.random() * Sequencer.elementLinkWeight(element));
 
               for (var z = 0; z < element.link.length; z++) {
                 randomLink -= element.link[z].weight;
@@ -37,7 +40,7 @@ export class GeneticSequenceRandomizer {
               }
             } else if (link !== undefined) {
               if (link !== undefined) {
-                let randomLink = Math.floor(Math.random() * ImageCompiler.layerLinkWeight(layer));
+                let randomLink = Math.floor(Math.random() * Sequencer.layerLinkWeight(layer));
 
                 for (var z = 0; z < link.length; z++) {
                   randomLink -= link[z].weight;
@@ -61,6 +64,6 @@ export class GeneticSequenceRandomizer {
         }
       }
     });
-    return sequences;
+    return new Element(sequences);
   };
 }

@@ -1,5 +1,5 @@
 import { LayerElement, GeneSequence, CanvasRenderObject, LayerConfig, ImageFormatConfig, BuildConfig } from './types';
-import { ImageCompiler } from './x/compiler';
+import { Generator } from './x/Generator';
 
 const layerConfig: LayerConfig[] = [
   {
@@ -886,6 +886,10 @@ const basePath = process.cwd();
 
 const imageFormatConfig: ImageFormatConfig = { width: 1500, height: 1500, smoothing: false };
 
-const layer: ImageCompiler = new ImageCompiler(layerConfig, imageFormatConfig, basePath, false, false);
+const app: Generator = new Generator({
+  configs: layerConfig,
+  imageFormat: imageFormatConfig,
+  basePath,
+});
 
-layer.createRandomImages(5555);
+app.createRandomCollection({ totalSupply: 5555, savePath: '' });

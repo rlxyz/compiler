@@ -1,8 +1,9 @@
 import { Image, loadImage } from 'canvas';
 import fs from 'fs';
-import { GeneSequence, CanvasRenderObject } from '../types';
+import { CanvasRenderObject, GeneSequence } from '../../types';
+import { createImage } from './image';
 
-export class Gene {
+export class Element {
   sequences: GeneSequence[];
 
   constructor(sequences: GeneSequence[]) {
@@ -11,6 +12,10 @@ export class Gene {
 
   string = () => {
     return this.sequences;
+  };
+
+  toBuffer = async () => {
+    return await createImage(this, 1, 1);
   };
 
   loadImages = (): Promise<CanvasRenderObject>[] => {
