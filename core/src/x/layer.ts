@@ -19,6 +19,7 @@ class Layer {
   metadata: boolean;
   linkName?: string;
   layerPath: string;
+  weight: number;
 
   // todo: fix rarityDelimter being passed multiple times
   // todo: fix type name checking conmbination and exclude properties
@@ -39,8 +40,18 @@ class Layer {
     this.link = config?.link || undefined;
     this.linkName = config?.linkName || undefined;
     this.metadata = config?.metadata || false;
+    this.weight = Layer._getElementWeightage(this);
     config.options?.combination != undefined && (this.combination = config.options.combination);
     config.options?.exclude != undefined && (this.exclude = config.options.exclude);
+  }
+
+  private static _getElementWeightage(layer: Layer): number {
+    if (layer.elements === undefined) return 0;
+    var totalWeight = 0;
+    layer.elements.forEach((element) => {
+      totalWeight += element.weight;
+    });
+    return totalWeight;
   }
 
   private static _getLayerElements = (config: LayerConfig, path: string): LayerElement[] => {

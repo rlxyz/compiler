@@ -6,8 +6,13 @@ import path from 'path';
 import sha256 from 'crypto-js/sha256';
 import { createImage } from './image';
 import Layer from './layer';
+import { GeneticSequenceRandomizer } from './GeneticSequenceRandomizer';
 
-class ImageCompiler {
+class Application {
+  sequencer: Sequencer;
+}
+
+class Sequencer {
   layers: Layer[];
   width: number;
   height: number;
@@ -284,72 +289,10 @@ class ImageCompiler {
   };
 
   createRandomGene(): Gene {
-    let sequences: GeneSequence[] = [];
-
-    this.layers.forEach((layer, index) => {
-      const totalWeight = this.layerElementWeight(layer);
-
-      for (var k = 0; k < layer.iterations; k++) {
-        if (Math.random() > layer.occuranceRate) {
-          continue;
-        }
-
-        let random = Math.floor(Math.random() * totalWeight);
-
-        for (var i = 0; i < layer.elements.length; i++) {
-          if (
-            this.layerElementHasCombination(layer, i, sequences) ||
-            this.layerElementHasExclusion(layer, i, sequences)
-          ) {
-            continue;
-          }
-
-          random -= layer.elements[i].weight;
-          if (random < 0) {
-            let element = this.layers[index].elements.find((e) => e.id == layer.elements[i].id);
-
-            if (element?.link !== undefined) {
-              let randomLink = Math.floor(Math.random() * this.elementLinkWeight(element));
-
-              for (var z = 0; z < element.link.length; z++) {
-                randomLink -= element.link[z].weight;
-                if (randomLink < 0) {
-                  // @ts-ignore
-                  element.linkExtension = `${element.link[z].name}`;
-                  break;
-                }
-              }
-            } else if (layer.link !== undefined) {
-              if (layer.link !== undefined) {
-                let randomLink = Math.floor(Math.random() * this.layerLinkWeight(layer));
-
-                for (var z = 0; z < layer.link.length; z++) {
-                  randomLink -= layer.link[z].weight;
-                  if (randomLink < 0) {
-                    // @ts-ignore
-                    element.linkExtension = `${layer.link[z].name}`;
-                    break;
-                  }
-                }
-              }
-            }
-
-            sequences.push({
-              layerIndex: index,
-              elementIndex: layer.elements[i].id,
-              element: element,
-            });
-
-            break;
-          }
-        }
-      }
-    });
-
-    return new Gene(sequences);
+    return new Gene(GeneticSequenceRandomizer.Run(this.layers));
   }
 
-  elementLinkWeight(element: LayerElement): number {
+  public static elementLinkWeight(element: LayerElement): number {
     if (element.link === undefined) return 0;
     var totalWeight = 0;
     element.link.forEach((link) => {
@@ -358,7 +301,7 @@ class ImageCompiler {
     return totalWeight;
   }
 
-  layerLinkWeight(layer: Layer): number {
+  public static layerLinkWeight(layer: Layer): number {
     var totalWeight = 0;
     layer.link.forEach((element: any) => {
       totalWeight += element.weight;
@@ -366,7 +309,7 @@ class ImageCompiler {
     return totalWeight;
   }
 
-  layerElementWeight(layer: Layer): number {
+  public static layerElementWeight(layer: Layer): number {
     if (layer.elements === undefined) return 0;
     var totalWeight = 0;
     layer.elements.forEach((element) => {
@@ -375,7 +318,12 @@ class ImageCompiler {
     return totalWeight;
   }
 
-  layerElementHasCombination(layer: Layer, index: number, sequences: GeneSequence[]) {
+  public static layerElementHasCombination(
+    layers: Layer[],
+    layer: Layer,
+    index: number,
+    sequences: GeneSequence[],
+  ): boolean {
     if (!layer.combination) {
       return false;
     }
@@ -384,7 +332,7 @@ class ImageCompiler {
     sequences.forEach((sequence) => {
       if (
         layer.combination[layer.elements[index].name].includes(
-          this.layers[sequence.layerIndex].elements[sequence.elementIndex].name,
+          layers[sequence.layerIndex].elements[sequence.elementIndex].name,
         )
       ) {
         count++;
@@ -398,14 +346,19 @@ class ImageCompiler {
     return false;
   }
 
-  layerElementHasExclusion(layer: Layer, index: number, sequences: GeneSequence[]) {
+  public static layerElementHasExclusion(
+    layers: Layer[],
+    layer: Layer,
+    index: number,
+    sequences: GeneSequence[],
+  ): boolean {
     if (!layer.exclude) {
       return false;
     }
     sequences.forEach((sequence) => {
       if (
         layer.exclude[layer.elements[index].name].includes(
-          this.layers[sequence.layerIndex].elements[sequence.elementIndex].name,
+          layers[sequence.layerIndex].elements[sequence.elementIndex].name,
         )
       ) {
         return true;
@@ -415,4 +368,4 @@ class ImageCompiler {
   }
 }
 
-export { ImageCompiler };
+export { Sequencer as ImageCompiler };

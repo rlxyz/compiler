@@ -14,11 +14,7 @@ const basePath = process.cwd(); // todo: move somewhere else?
 // 4. rename some routes. too long.
 // 5. cleaner naming conventions
 
-const collectionAllowlistValidation = (
-  request: express.Request,
-  response: express.Response,
-  next: express.NextFunction,
-) => {
+const collectionMiddleware = (request: express.Request, response: express.Response, next: express.NextFunction) => {
   const username = request.params.username as string;
   if (!allowlist.includes(username)) {
     return response.status(400).send({
@@ -30,8 +26,14 @@ const collectionAllowlistValidation = (
 };
 
 router.get(
+  '/:username/generate/:token_hash',
+  collectionMiddleware,
+  async (request: express.Request, response: express.Response) => {},
+);
+
+router.get(
   '/:username/generate/random',
-  collectionAllowlistValidation,
+  collectionMiddleware,
   async (request: express.Request, response: express.Response) => {
     const layer: ImageCompiler = new ImageCompiler(layerConfig, imageFormatConfig, basePath, false, false);
     const imageBuffer = await layer.createRandomImageBuffer();
@@ -41,7 +43,7 @@ router.get(
 
 router.get(
   '/:username/generate/rarity/:type',
-  collectionAllowlistValidation,
+  collectionMiddleware,
   async (request: express.Request, response: express.Response) => {
     const type: CollectionAnalyticsType = request.params.type as CollectionAnalyticsType;
     const layers: ImageCompiler = new ImageCompiler(layerConfig, imageFormatConfig, basePath, false, false);
