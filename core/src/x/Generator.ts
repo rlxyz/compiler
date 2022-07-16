@@ -1,5 +1,5 @@
 import fs from 'fs';
-import { CollectionAnalyticsType, ImageFormatConfig, LayerConfig, Token } from '../types';
+import { CollectionAnalyticsType, ImageFormatConfig, LayerConfig, Token } from '../utils/types';
 import path from 'path';
 import sha256 from 'crypto-js/sha256';
 import { Sequencer } from './Sequencer';

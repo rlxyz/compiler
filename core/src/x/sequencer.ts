@@ -1,7 +1,6 @@
 import fs from 'fs';
-import { LayerConfig } from '../types';
+import { LayerConfig, ElementSource, LayerElement } from '../utils/types';
 import { Element } from './Element';
-import { ElementSource, LayerElement } from '../types';
 import Layer from './Layer';
 
 // Only handles the sequencing of Layers with a GeneSequence

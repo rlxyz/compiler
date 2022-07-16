@@ -1,5 +1,5 @@
 import { ImageElement } from './Element';
-import { ElementSource } from '../types';
+import { ElementSource } from '../utils/types';
 import Layer from './Layer';
 import { Sequencer } from './Sequencer';
 

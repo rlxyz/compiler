@@ -1,6 +1,7 @@
-import { ImageFormatConfig, LayerConfig } from './utils/types';
+import { Generator } from '../x/Generator';
+import { LayerElement, ElementSource, CanvasRenderObject, LayerConfig, ImageFormatConfig, BuildConfig } from './types';
 
-export const layerConfig: LayerConfig[] = [
+const layerConfig: LayerConfig[] = [
   {
     name: '1. Background',
     metadata: true,
@@ -881,8 +882,14 @@ export const layerConfig: LayerConfig[] = [
   },
 ];
 
-export const imageFormatConfig: ImageFormatConfig = {
-  width: 1500,
-  height: 1500,
-  smoothing: false,
-};
+const basePath = process.cwd();
+
+const imageFormatConfig: ImageFormatConfig = { width: 1500, height: 1500, smoothing: false };
+
+const app: Generator = new Generator({
+  configs: layerConfig,
+  imageFormat: imageFormatConfig,
+  basePath,
+});
+
+app.createRandomCollection({ totalSupply: 5555 });

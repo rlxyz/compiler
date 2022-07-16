@@ -1,6 +1,6 @@
 import { Image, loadImage } from 'canvas';
 import sha256 from 'crypto-js/sha256';
-import { CanvasRenderObject, ElementSource } from '../types';
+import { CanvasRenderObject, ElementSource } from '../utils/types';
 import { CanvasObject, clearCanvas, createCanvas, drawImage, saveImage } from '../utils/canvas';
 import Layer from './Layer';
 
