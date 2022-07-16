@@ -15,8 +15,8 @@ export const createCanvas = (width: number, height: number): CanvasObject => {
   };
 };
 
-export const saveImage = (canvas: Canvas, path: string) => {
-  fs.writeFileSync(path, canvas.toBuffer('image/png'));
+export const saveImage = (buffer: Buffer, path: string) => {
+  fs.writeFileSync(path, buffer);
 };
 
 export const clearCanvas = (context: CanvasRenderingContext2D, width: number, height: number) => {

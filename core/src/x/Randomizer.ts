@@ -1,11 +1,11 @@
-import { Element } from './utils/element';
-import { GeneSequence } from '../types';
-import Layer from './utils/layer';
+import { ImageElement } from './Element';
+import { ElementSource } from '../types';
+import Layer from './Layer';
 import { Sequencer } from './Sequencer';
 
-export class Randomizer {
-  public static Run = (layers: Layer[]): Element => {
-    let sequences: GeneSequence[] = [];
+export class ImageElementRandomizer {
+  public static Run = (layers: Layer[], width: number, height: number): ImageElement => {
+    let sequences: ElementSource[] = [];
     layers.forEach((layer: Layer, index: number) => {
       const { weight, iterations, occuranceRate, elements, link } = layer;
       for (var k = 0; k < iterations; k++) {
@@ -64,6 +64,6 @@ export class Randomizer {
         }
       }
     });
-    return new Element(sequences);
+    return new ImageElement(sequences, width, height, layers);
   };
 }

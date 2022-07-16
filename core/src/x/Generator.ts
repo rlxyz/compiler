@@ -3,9 +3,8 @@ import { CollectionAnalyticsType, ImageFormatConfig, LayerConfig, Token } from '
 import path from 'path';
 import sha256 from 'crypto-js/sha256';
 import { Sequencer } from './Sequencer';
-import { Randomizer } from './Randomizer';
-import { createImage } from './utils/image';
-import { Element } from './utils/element';
+import { ImageElementRandomizer } from './Randomizer';
+import { Element } from './Element';
 
 // 0v1.0.0
 // Every ArtElement is an array of ImageElement
@@ -42,7 +41,13 @@ export class Generator {
     this.imageHeader.height = imageFormat.height;
   }
 
-  createRandomCollection = async ({ totalSupply, savePath = '' }: { totalSupply: number; savePath: string }) => {
+  createRandomCollection = async ({
+    totalSupply,
+    savePath = '',
+  }: {
+    totalSupply: number;
+    savePath?: string;
+  }): Promise<{ data: any; tokens: any }> => {
     if (savePath !== '' && !fs.existsSync(savePath)) {
       throw new Error('savePath invalid');
     }
@@ -63,18 +68,9 @@ export class Generator {
 
     for (var i = startPoint; i < totalSupply + startPoint; ) {
       const element: Element = this.createElementFromRandomness();
-      savePath !== '' &&
-        (await createImage(element, this.imageHeader.width, this.imageHeader.height, `${savePath}/${i}.png`));
-      const metadata: { name: string; attributes: any[] } = this.sequencer.createImageMetadata(element, i);
-      const { attributes } = metadata;
-
-      const hash: string = sha256(
-        attributes
-          .map((attr) => {
-            return attr['value'];
-          })
-          .join('-'),
-      ).toString();
+      savePath !== '' && element.toFile(`${savePath}/${i}.png`);
+      const hash: string = element.toHex(); // todo: fix. should need to pass in this.sequencer.layers
+      const attributes: any[] = element.toAttributes(); // todo: fix. should need to pass in this.sequencer.layers
 
       if (!allHash.has(hash)) {
         i++;
@@ -88,11 +84,11 @@ export class Generator {
   };
 
   createElementFromHash = (tokenHash: string): Element => {
-    return Randomizer.Run(this.sequencer.layers);
+    return ImageElementRandomizer.Run(this.sequencer.layers, this.imageHeader.width, this.imageHeader.height);
   };
 
   createElementFromRandomness(): Element {
-    return Randomizer.Run(this.sequencer.layers);
+    return ImageElementRandomizer.Run(this.sequencer.layers, this.imageHeader.width, this.imageHeader.height);
   }
 
   public static calculateRarityAttributes = (tokens: any[], data: any[], type: CollectionAnalyticsType) => {

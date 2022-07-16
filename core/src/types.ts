@@ -60,7 +60,7 @@ export type LayerElement = {
   linkExtension?: string;
 };
 
-export type GeneSequence = {
+export type ElementSource = {
   layerIndex: number;
   elementIndex: number;
   element: any;

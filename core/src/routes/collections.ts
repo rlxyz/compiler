@@ -55,7 +55,7 @@ router.get(
       imageFormat: imageFormatConfig,
       basePath,
     });
-    const { tokens, data } = await app.createRandomCollection({ totalSupply: 5555, savePath: '' });
+    const { tokens, data } = await app.createRandomCollection({ totalSupply: 5555 });
     return response.status(200).send(Generator.calculateRarityAttributes(tokens, data, type));
   },
 );

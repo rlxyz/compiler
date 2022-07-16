@@ -1,4 +1,4 @@
-import { LayerElement, GeneSequence, CanvasRenderObject, LayerConfig, ImageFormatConfig, BuildConfig } from './types';
+import { LayerElement, ElementSource, CanvasRenderObject, LayerConfig, ImageFormatConfig, BuildConfig } from './types';
 import { Generator } from './x/Generator';
 
 const layerConfig: LayerConfig[] = [
@@ -892,4 +892,4 @@ const app: Generator = new Generator({
   basePath,
 });
 
-app.createRandomCollection({ totalSupply: 5555, savePath: '' });
+app.createRandomCollection({ totalSupply: 5555 });

@@ -1,8 +1,8 @@
 import fs from 'fs';
 import { LayerConfig } from '../types';
-import { Element } from './utils/element';
-import { GeneSequence, LayerElement } from '../types';
-import Layer from './utils/layer';
+import { Element } from './Element';
+import { ElementSource, LayerElement } from '../types';
+import Layer from './Layer';
 
 // Only handles the sequencing of Layers with a GeneSequence
 // Doesn't handle metadata or other things
@@ -24,21 +24,21 @@ export class Sequencer {
     this.layers = configs.map((config: LayerConfig) => new Layer(config, `${this.layersPath}/${config.name}`));
   }
 
-  createImageMetadata = (gene: Element, edition: number): { name: string; attributes: any[] } => {
+  createImageMetadata = (gene: Element): any[] => {
     let attributes: any[] = [];
 
     this.layers.forEach((layer: Layer, i) => {
-      if (layer.metadata && gene.sequences[i]) {
-        const name = this.layers[gene.sequences[i].layerIndex].name;
+      if (layer.metadata && gene.sources[i]) {
+        const name = this.layers[gene.sources[i].layerIndex].name;
         const trait = {
           trait_type: name,
-          value: name == 'Skin' ? gene.sequences[i].element.name.split('. ')[1] : gene.sequences[i].element.name,
+          value: name == 'Skin' ? gene.sources[i].element.name.split('. ')[1] : gene.sources[i].element.name,
         };
         let extra = {};
         if (layer.link) {
           extra = {
-            trait_type: this.layers[gene.sequences[i].layerIndex].linkName,
-            value: gene.sequences[i].element.linkExtension.split('.').slice(0, -1).join('.'),
+            trait_type: this.layers[gene.sources[i].layerIndex].linkName,
+            value: gene.sources[i].element.linkExtension.split('.').slice(0, -1).join('.'),
           };
           attributes.push(extra);
         }
@@ -46,15 +46,10 @@ export class Sequencer {
       }
     });
 
-    const metadata = {
-      name: `${process.env.COLLECTION_NAME} #${edition}`,
-      attributes: attributes,
-    };
-
     // if (this.body.saveMetadata) {
     //   fs.writeFileSync(`${this.body.metadataPath}/${edition}.json`, JSON.stringify(metadata, null, 2));
     // }
-    return metadata;
+    return attributes;
   };
 
   public static elementLinkWeight(element: LayerElement): number {
@@ -87,7 +82,7 @@ export class Sequencer {
     layers: Layer[],
     layer: Layer,
     index: number,
-    sequences: GeneSequence[],
+    sequences: ElementSource[],
   ): boolean {
     if (!layer.combination) {
       return false;
@@ -115,7 +110,7 @@ export class Sequencer {
     layers: Layer[],
     layer: Layer,
     index: number,
-    sequences: GeneSequence[],
+    sequences: ElementSource[],
   ): boolean {
     if (!layer.exclude) {
       return false;
