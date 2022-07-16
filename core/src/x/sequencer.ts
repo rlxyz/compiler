@@ -1,72 +1,45 @@
 import fs from 'fs';
 import { LayerConfig, ElementSource, LayerElement } from '../utils/types';
-import { Element } from './Element';
+import { Element, ImageElement } from './Element';
 import Layer from './Layer';
 
 // Only handles the sequencing of Layers with a GeneSequence
 // Doesn't handle metadata or other things
 export class Sequencer {
-  layers: Layer[];
-  layersPath: string;
+  // rarely changes
+  header: {
+    width: number;
+    height: number;
+  };
 
-  constructor(configs: LayerConfig[], basePath: string) {
+  // regularly changes
+  body: {
+    layers: Layer[];
+    layersPath: string;
+  };
+
+  constructor(configs: LayerConfig[], basePath: string, width: number, height: number) {
     if (configs.length === 0) {
       throw new Error('configs failed with length 0');
     }
 
-    this.layersPath = basePath + '/layers';
-
-    if (!fs.existsSync(this.layersPath)) {
+    const layersPath = `${basePath}/layers`;
+    if (!fs.existsSync(layersPath)) {
       throw new Error('layerPath invalid');
     }
-
-    this.layers = configs.map((config: LayerConfig) => new Layer(config, `${this.layersPath}/${config.name}`));
+    this.body = {
+      layers: configs.map((config: LayerConfig) => new Layer(config, `${layersPath}/${config.name}`)),
+      layersPath: layersPath,
+    };
+    this.header = {
+      width: width,
+      height: height,
+    };
   }
 
-  createImageMetadata = (gene: Element): any[] => {
-    let attributes: any[] = [];
-
-    this.layers.forEach((layer: Layer, i) => {
-      if (layer.metadata && gene.sources[i]) {
-        const name = this.layers[gene.sources[i].layerIndex].name;
-        const trait = {
-          trait_type: name,
-          value: name == 'Skin' ? gene.sources[i].element.name.split('. ')[1] : gene.sources[i].element.name,
-        };
-        let extra = {};
-        if (layer.link) {
-          extra = {
-            trait_type: this.layers[gene.sources[i].layerIndex].linkName,
-            value: gene.sources[i].element.linkExtension.split('.').slice(0, -1).join('.'),
-          };
-          attributes.push(extra);
-        }
-        attributes.push(trait);
-      }
-    });
-
-    // if (this.body.saveMetadata) {
-    //   fs.writeFileSync(`${this.body.metadataPath}/${edition}.json`, JSON.stringify(metadata, null, 2));
-    // }
-    return attributes;
+  createElement = (seed: string): Element => {
+    return ImageElementRandomizer.Run(this.body.layers, this.header.width, this.header.height);
   };
-
-  public static elementLinkWeight(element: LayerElement): number {
-    if (element.link === undefined) return 0;
-    var totalWeight = 0;
-    element.link.forEach((link) => {
-      totalWeight += link.weight;
-    });
-    return totalWeight;
-  }
-
-  public static layerLinkWeight(layer: Layer): number {
-    var totalWeight = 0;
-    layer.link.forEach((element: any) => {
-      totalWeight += element.weight;
-    });
-    return totalWeight;
-  }
 
   public static layerElementWeight(layer: Layer): number {
     if (layer.elements === undefined) return 0;
@@ -125,4 +98,40 @@ export class Sequencer {
     });
     return false;
   }
+}
+
+export class ImageElementRandomizer {
+  public static Run = (layers: Layer[], width: number, height: number): ImageElement => {
+    let sequences: ElementSource[] = [];
+    layers.forEach((layer: Layer, index: number) => {
+      const { weight, iterations, occuranceRate, elements } = layer;
+      for (var k = 0; k < iterations; k++) {
+        if (Math.random() > occuranceRate) {
+          continue;
+        }
+
+        let random = Math.floor(Math.random() * weight);
+
+        for (var i = 0; i < elements.length; i++) {
+          if (
+            Sequencer.layerElementHasCombination(layers, layer, i, sequences) ||
+            Sequencer.layerElementHasExclusion(layers, layer, i, sequences)
+          ) {
+            continue;
+          }
+
+          random -= elements[i].weight;
+          if (random < 0) {
+            sequences.push({
+              layerIndex: index,
+              elementIndex: elements[i].id,
+              element: layers[index].elements.find((e) => e.id == elements[i].id),
+            });
+            break;
+          }
+        }
+      }
+    });
+    return new ImageElement(sequences, width, height, layers);
+  };
 }

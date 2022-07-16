@@ -1,6 +1,6 @@
 import express, { Router } from 'express';
 import { imageFormatConfig, layerConfig } from '../config';
-import { CollectionAnalyticsType, ImageFormatConfig, LayerConfig } from '../types';
+import { CollectionAnalyticsType, ImageFormatConfig, LayerConfig } from '../utils/types';
 import { Generator } from '../x/Generator';
 
 const router: Router = express.Router();

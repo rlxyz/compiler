@@ -9,16 +9,14 @@ export const LAYER_TYPES = {
 class Layer {
   name: string;
   elements: LayerElement[];
+
+  layerPath: string;
   iterations: number;
   occuranceRate: number;
-  type?: string;
+  weight: number;
+
   combination?: any;
   exclude?: any;
-  link?: any;
-  metadata: boolean;
-  linkName?: string;
-  layerPath: string;
-  weight: number;
 
   // todo: fix rarityDelimter being passed multiple times
   // todo: fix type name checking conmbination and exclude properties
@@ -27,18 +25,11 @@ class Layer {
       throw new Error("layer name doesn't exists");
     }
 
-    // Header
     this.name = config.name;
     this.layerPath = layerPath;
-
-    // Body
     this.elements = Layer._getLayerElements(config, this.layerPath);
     this.iterations = config.options?.iterations || 1;
     this.occuranceRate = config.options?.occuranceRate || 1;
-    this.type = config.options?.type || LAYER_TYPES.NORMAL;
-    this.link = config?.link || undefined;
-    this.linkName = config?.linkName || undefined;
-    this.metadata = config?.metadata || false;
     this.weight = Layer._getElementWeightage(this);
     config.options?.combination != undefined && (this.combination = config.options.combination);
     config.options?.exclude != undefined && (this.exclude = config.options.exclude);
@@ -54,28 +45,19 @@ class Layer {
   }
 
   private static _getLayerElements = (config: LayerConfig, path: string): LayerElement[] => {
-    return config.traits.map(({ name, weight, link }, index) => {
+    return config.traits.map(({ name, weight }, index) => {
       return {
         id: index,
-        name: Layer._getLayerElementName(name),
-        path: Layer._getLayerElementPath(path, name),
+        name: name.replace(/.(jpg|jpeg|png|gif)$/i, ''),
+        path: `${path}/${name
+          .toLowerCase()
+          .replace(/(\s+)/g, '-')
+          .replace(new RegExp(/\s+(.)(\w*)/, 'g'), ($1, $2, $3) => `${$2.toUpperCase() + $3}`)
+          .replace(new RegExp(/\w/), (s) => s.toUpperCase())}${'.png'}`,
         filename: name,
         weight: weight || 1,
-        link: link,
       };
     });
-  };
-
-  private static _getLayerElementPath = (_path: string, _name: string): string => {
-    return `${_path}/${_name
-      .toLowerCase()
-      .replace(/(\s+)/g, '-')
-      .replace(new RegExp(/\s+(.)(\w*)/, 'g'), ($1, $2, $3) => `${$2.toUpperCase() + $3}`)
-      .replace(new RegExp(/\w/), (s) => s.toUpperCase())}${'.png'}`;
-  };
-
-  private static _getLayerElementName = (_name: string): string => {
-    return _name.replace(/.(jpg|jpeg|png|gif)$/i, '');
   };
 }
 

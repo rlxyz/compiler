@@ -3,7 +3,6 @@ import { CollectionAnalyticsType, ImageFormatConfig, LayerConfig, Token } from '
 import path from 'path';
 import sha256 from 'crypto-js/sha256';
 import { Sequencer } from './Sequencer';
-import { ImageElementRandomizer } from './Randomizer';
 import { Element } from './Element';
 
 // 0v1.0.0
@@ -13,14 +12,17 @@ import { Element } from './Element';
 // - every ImageElement has a FolderSource - pointer to an image url file or folder
 // - the FolderSource has a PriorityIndex - the position on the image
 // - only a single filder can be chosen in a single FolderSource
-
+// --///--
+// Generator -- Aggregator Level. Technically, not important.
+//
+// Sequencer -- Sequencing Level -- includes Randomizer
+//
+// Layer -- Element -- Building Block Level -- handles storage (both local & cloud-storage, cid-based structure & folder), handles images (both local & cloud, cid-based structure)
+// --///---
+//
+// Can we standarise metadata querying?
 export class Generator {
   sequencer: Sequencer;
-
-  imageHeader: {
-    width: number;
-    height: number;
-  };
 
   constructor({
     configs,
@@ -31,14 +33,11 @@ export class Generator {
     imageFormat: ImageFormatConfig;
     basePath: string;
   }) {
-    this.sequencer = new Sequencer(configs, basePath);
+    this.sequencer = new Sequencer(configs, basePath, imageFormat.width, imageFormat.height);
 
     if (imageFormat.height === 0 || imageFormat.width === 0) {
       throw new Error('dimensions invalid');
     }
-
-    this.imageHeader.width = imageFormat.width;
-    this.imageHeader.height = imageFormat.height;
   }
 
   createRandomCollection = async ({
@@ -64,14 +63,12 @@ export class Generator {
         .map((file) => ({ file, mtime: fs.lstatSync(path.join(`${savePath}`, file)).mtime }))
         .sort((a, b) => b.mtime.getTime() - a.mtime.getTime());
 
-    let startPoint = files.length > 0 ? Number(files[0].file.slice(0, -4)) : 0 + 1;
-
+    let startPoint = files.length > 0 ? Number(files[0].file.slice(0, -4)) + 1 : 0;
     for (var i = startPoint; i < totalSupply + startPoint; ) {
       const element: Element = this.createElementFromRandomness();
       savePath !== '' && element.toFile(`${savePath}/${i}.png`);
-      const hash: string = element.toHex(); // todo: fix. should need to pass in this.sequencer.layers
-      const attributes: any[] = element.toAttributes(); // todo: fix. should need to pass in this.sequencer.layers
-
+      const hash: string = element.toHex();
+      const attributes: any[] = element.toAttributes();
       if (!allHash.has(hash)) {
         i++;
         allHash.add(hash);
@@ -79,16 +76,15 @@ export class Generator {
         data.push(attributes);
       }
     }
-
     return { tokens, data };
   };
 
   createElementFromHash = (tokenHash: string): Element => {
-    return ImageElementRandomizer.Run(this.sequencer.layers, this.imageHeader.width, this.imageHeader.height);
+    return this.sequencer.createElement(tokenHash);
   };
 
   createElementFromRandomness(): Element {
-    return ImageElementRandomizer.Run(this.sequencer.layers, this.imageHeader.width, this.imageHeader.height);
+    return this.sequencer.createElement('some_random_stuff');
   }
 
   public static calculateRarityAttributes = (tokens: any[], data: any[], type: CollectionAnalyticsType) => {

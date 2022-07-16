@@ -6,8 +6,8 @@ import Layer from './Layer';
 
 export abstract class Element {
   sources: ElementSource[];
-  width: number;
-  height: number;
+  width: number; // can be inferred from the collection
+  height: number; // can be inferred from the collection
   layers: Layer[];
 
   constructor(sources: ElementSource[], width: number, height: number, layers: Layer[]) {
@@ -28,6 +28,7 @@ export abstract class Element {
   public abstract loadSources(): Promise<CanvasRenderObject>[];
 }
 
+// can i infer the layer index if I always keep it in priority -- what are these issues with this approach?
 export class ImageElement extends Element {
   constructor(sources: ElementSource[], width: number, height: number, layers: Layer[]) {
     super(sources, width, height, layers);
@@ -36,7 +37,7 @@ export class ImageElement extends Element {
   toAttributes(): any[] {
     let attributes: any[] = [];
     this.layers.forEach((layer: Layer, i) => {
-      if (layer.metadata && this.sources[i]) {
+      if (this.sources[i]) {
         attributes.push({
           trait_type: this.layers[this.sources[i].layerIndex].name,
           value: this.sources[i].element.name,
@@ -47,13 +48,16 @@ export class ImageElement extends Element {
   }
 
   toHex = (): string => {
-    return sha256(
-      this.toAttributes()
-        .map((attr) => {
-          return attr['value'];
-        })
-        .join('-'),
-    ).toString();
+    return (
+      '0x' +
+      sha256(
+        this.toAttributes()
+          .map((attr) => {
+            return attr['value'];
+          })
+          .join('-'),
+      ).toString()
+    );
   };
 
   toBuffer = async (): Promise<Buffer> => {
@@ -76,10 +80,10 @@ export class ImageElement extends Element {
   loadSources = (): Promise<CanvasRenderObject>[] => {
     const loadedElements: Promise<CanvasRenderObject>[] = this.sources.map((source: ElementSource) => {
       const {
-        element: { path, linkExtension },
+        element: { path },
       } = source;
       return new Promise(async (resolve) => {
-        const image: Image = await loadImage(path + (linkExtension && `_${linkExtension}`));
+        const image: Image = await loadImage(path);
         resolve({ image: image });
       });
     });

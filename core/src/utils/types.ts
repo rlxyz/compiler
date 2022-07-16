@@ -52,18 +52,12 @@ export type LayerElement = {
   filename: string;
   path: string;
   weight: number;
-  link?: {
-    name: string;
-    weight: number;
-  }[];
-  linkName?: string;
-  linkExtension?: string;
 };
 
 export type ElementSource = {
   layerIndex: number;
   elementIndex: number;
-  element: any;
+  element: LayerElement;
 };
 
 export type CanvasRenderObject = {
