@@ -88,7 +88,12 @@ export class Generator {
     return this.sequencer.createElement(utils.keccak256(utils.toUtf8Bytes(String(Math.random()))));
   }
 
-  public static calculateRarityAttributes = (tokens: any[], data: any[], type: CollectionAnalyticsType) => {
+  public static calculateRarityAttributes = (
+    tokens: any[],
+    data: any[],
+    type: CollectionAnalyticsType,
+    totalSupply: number,
+  ) => {
     let traits: any = {};
     for (var item of data) {
       for (var attributes of item) {
@@ -172,7 +177,7 @@ export class Generator {
         }
 
         let rank = [];
-        for (var j = 0; j < 5555; j++) {
+        for (var j = 0; j < totalSupply; j++) {
           let rarityValue = 0;
           for (const item of tokens[j]['attributes']) {
             const { trait_type, value } = item;
@@ -197,7 +202,7 @@ export class Generator {
               header: {
                 token_id: token_id,
                 token_hash: tokens[token_id]['token_hash'],
-                // image_url: `${process.env.IMAGE_GENERATE_URL}/${tokens[token_id]['token_hash']}`,
+                image_url: `${process.env.IMAGE_GENERATE_URL}/${tokens[token_id]['token_hash']}`,
                 total_rating: token.rarity,
               },
               traits: tokens[token_id]['attributes'].map((attribute: any) => {

@@ -26,9 +26,18 @@ const collectionMiddleware = (request: express.Request, response: express.Respon
 };
 
 router.get(
-  '/:username/generate/:token_hash',
+  '/:username/generate/token/:token_hash',
   collectionMiddleware,
-  async (request: express.Request, response: express.Response) => {},
+  async (request: express.Request, response: express.Response) => {
+    const tokenHash = request.params.token_hash as string;
+    const app: Generator = new Generator({
+      configs: layerConfig,
+      imageFormat: imageFormatConfig,
+      basePath,
+    });
+    const imageBuffer = await (await app.createElementFromHash(tokenHash)).toBuffer();
+    return response.setHeader('Content-Type', 'image/png').send(imageBuffer);
+  },
 );
 
 router.get(
@@ -40,8 +49,8 @@ router.get(
       imageFormat: imageFormatConfig,
       basePath,
     });
-    const imageBuffer = (await app.createElementFromRandomness()).toBuffer();
-    return response.status(200).setHeader('Content-Type', 'image/png').send(imageBuffer);
+    const imageBuffer = await (await app.createElementFromRandomness()).toBuffer();
+    return response.setHeader('Content-Type', 'image/png').send(imageBuffer);
   },
 );
 
@@ -55,8 +64,10 @@ router.get(
       imageFormat: imageFormatConfig,
       basePath,
     });
-    const { tokens, data } = await app.createRandomCollection({ totalSupply: 5555 });
-    return response.status(200).send(Generator.calculateRarityAttributes(tokens, data, type));
+    const totalSupply = 111;
+    const { tokens, data } = await app.createRandomCollection({ totalSupply: totalSupply });
+    const a = Generator.calculateRarityAttributes(tokens, data, type, totalSupply);
+    return response.status(200).send(a);
   },
 );
 

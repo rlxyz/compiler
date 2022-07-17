@@ -11,7 +11,7 @@ const port = process.env.PORT || 3000;
 app.use(cors());
 
 // Routes
-app.use('/collections', collectionRouter);
+app.use('/collection', collectionRouter);
 app.get('/gm', (_, res) => {
   res.status(200).end(`May the force be with you!`);
 });
