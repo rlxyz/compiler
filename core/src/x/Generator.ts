@@ -4,6 +4,7 @@ import path from 'path';
 import sha256 from 'crypto-js/sha256';
 import { Sequencer } from './Sequencer';
 import { Element } from './Element';
+import { utils } from 'ethers';
 
 // 0v1.0.0
 // Every ArtElement is an array of ImageElement
@@ -84,7 +85,7 @@ export class Generator {
   };
 
   createElementFromRandomness(): Element {
-    return this.sequencer.createElement('some_random_stuff');
+    return this.sequencer.createElement(utils.keccak256(utils.toUtf8Bytes(String(Math.random()))));
   }
 
   public static calculateRarityAttributes = (tokens: any[], data: any[], type: CollectionAnalyticsType) => {

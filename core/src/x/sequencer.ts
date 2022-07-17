@@ -3,7 +3,7 @@ import { LayerConfig, ElementSource, LayerElement } from '../utils/types';
 import { Element, ImageElement } from './Element';
 import Layer from './Layer';
 
-// Only handles the sequencing of Layers with a GeneSequence
+// Only handles the sequencing of Layers to create Elements
 // Doesn't handle metadata or other things
 export class Sequencer {
   // rarely changes
@@ -38,18 +38,10 @@ export class Sequencer {
   }
 
   createElement = (seed: string): Element => {
-    return ImageElementRandomizer.Run(this.body.layers, this.header.width, this.header.height);
+    return ImageElementRandomizer.Run(seed, this.body.layers, this.header.width, this.header.height);
   };
 
-  public static layerElementWeight(layer: Layer): number {
-    if (layer.elements === undefined) return 0;
-    var totalWeight = 0;
-    layer.elements.forEach((element) => {
-      totalWeight += element.weight;
-    });
-    return totalWeight;
-  }
-
+  // should move to Layer.ts
   public static layerElementHasCombination(
     layers: Layer[],
     layer: Layer,
@@ -100,17 +92,41 @@ export class Sequencer {
   }
 }
 
+const rng = (seed: number) => {
+  (seed ^= seed << 13), (seed ^= seed >> 17);
+  const e = (((seed ^= seed << 5) < 0 ? 1 + ~seed : seed) % 1e5) / 1e5;
+  return 0 === e || 1 === e ? 0.5 : e;
+};
+
+const createSeed = (tokenHash: string) => {
+  return parseInt(tokenHash.slice(0, 16), 16);
+};
+
+const chunkSubstr = (str: string, size: number) => {
+  const numChunks = Math.ceil(str.length / size);
+  const chunks = new Array(numChunks);
+
+  for (let i = 0, o = 0; i < numChunks; ++i, o += size) {
+    chunks[i] = str.substr(o, size);
+  }
+
+  return chunks;
+};
+
 export class ImageElementRandomizer {
-  public static Run = (layers: Layer[], width: number, height: number): ImageElement => {
+  public static Run = (seed: string, layers: Layer[], width: number, height: number): ImageElement => {
     let sequences: ElementSource[] = [];
+    const chunks = chunkSubstr(seed, 8); // broken to 8 sizes
+    chunks.shift();
+    const r = rng(createSeed(chunks[chunks.length - 1]));
     layers.forEach((layer: Layer, index: number) => {
       const { weight, iterations, occuranceRate, elements } = layer;
       for (var k = 0; k < iterations; k++) {
-        if (Math.random() > occuranceRate) {
+        if (r > occuranceRate) {
           continue;
         }
 
-        let random = Math.floor(Math.random() * weight);
+        let random = Math.floor(r * weight);
 
         for (var i = 0; i < elements.length; i++) {
           if (
