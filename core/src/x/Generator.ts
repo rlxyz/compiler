@@ -67,7 +67,7 @@ export class Generator {
     let startPoint = files.length > 0 ? Number(files[0].file.slice(0, -4)) + 1 : 0;
     for (var i = startPoint; i < totalSupply + startPoint; ) {
       const element: Element = this.createElementFromRandomness();
-      savePath !== '' && element.toFile(`${savePath}/${i}.png`);
+      savePath !== '' && (await element.toFile(`${savePath}/${i}.png`));
       const hash: string = element.toHex();
       const attributes: any[] = element.toAttributes();
       if (!allHash.has(hash)) {

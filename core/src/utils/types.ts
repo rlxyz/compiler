@@ -54,6 +54,11 @@ export type LayerElement = {
   weight: number;
 };
 
+// in string: "LI:EI:ENAME"
+// in array: ["LI", "EI", "ENAME"]
+// LI has a mapping
+// EI has a mapping
+// ENAME has a constant
 export type ElementSource = {
   layerIndex: number;
   elementIndex: number;

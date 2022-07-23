@@ -6,14 +6,11 @@ import Layer from './Layer';
 
 export abstract class Element {
   sources: ElementSource[];
-  width: number; // can be inferred from the collection
-  height: number; // can be inferred from the collection
   layers: Layer[];
+  source: string;
 
-  constructor(sources: ElementSource[], width: number, height: number, layers: Layer[]) {
+  constructor(sources: ElementSource[], layers: Layer[]) {
     this.sources = sources;
-    this.width = width;
-    this.height = height;
     this.layers = layers;
   }
 
@@ -29,9 +26,14 @@ export abstract class Element {
 }
 
 // can i infer the layer index if I always keep it in priority -- what are these issues with this approach?
-export class ImageElement extends Element {
+abstract class ImageElement extends Element {
+  width: number; // can be inferred from the collection
+  height: number; // can be inferred from the collection
+
   constructor(sources: ElementSource[], width: number, height: number, layers: Layer[]) {
-    super(sources, width, height, layers);
+    super(sources, layers);
+    this.width = width;
+    this.height = height;
   }
 
   toAttributes(): any[] {
@@ -48,18 +50,22 @@ export class ImageElement extends Element {
   }
 
   toHex = (): string => {
-    return (
-      '0x' +
-      sha256(
-        this.toAttributes()
-          .map((attr) => {
-            return attr['value'];
-          })
-          .join('-'),
-      ).toString()
-    );
+    return `0x${sha256(
+      this.toAttributes()
+        .map((attr) => {
+          return attr['value'];
+        })
+        .join('-'),
+    ).toString()}`;
   };
 
+  toFile = async (output: string): Promise<void> => {
+    const buffer: Buffer = await this.toBuffer();
+    saveImage(buffer, output);
+  };
+}
+
+export class ArtImageElement extends ImageElement {
   toBuffer = async (): Promise<Buffer> => {
     const { canvas, context }: CanvasObject = createCanvas(this.width, this.height);
     const loadedImages: Promise<CanvasRenderObject>[] = this.loadSources();
@@ -70,11 +76,6 @@ export class ImageElement extends Element {
       });
     });
     return canvas.toBuffer('image/png');
-  };
-
-  toFile = async (output: string): Promise<void> => {
-    const buffer: Buffer = await this.toBuffer();
-    saveImage(buffer, output);
   };
 
   loadSources = (): Promise<CanvasRenderObject>[] => {

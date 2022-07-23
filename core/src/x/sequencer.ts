@@ -1,6 +1,6 @@
 import fs from 'fs';
 import { LayerConfig, ElementSource, LayerElement } from '../utils/types';
-import { Element, ImageElement } from './Element';
+import { Element, ArtImageElement } from './Element';
 import Layer from './Layer';
 
 // Only handles the sequencing of Layers to create Elements
@@ -45,7 +45,7 @@ export class Sequencer {
   public static layerElementHasCombination(
     layers: Layer[],
     layer: Layer,
-    index: number,
+    elementName: string,
     sequences: ElementSource[],
   ): boolean {
     if (!layer.combination) {
@@ -54,11 +54,8 @@ export class Sequencer {
 
     let count = 0;
     sequences.forEach((sequence) => {
-      if (
-        layer.combination[layer.elements[index].name].includes(
-          layers[sequence.layerIndex].elements[sequence.elementIndex].name,
-        )
-      ) {
+      const name = Sequencer.getElementName(layers, sequence.layerIndex, sequence.elementIndex);
+      if (layer.combination[elementName]?.includes(name)) {
         count++;
       }
     });
@@ -70,25 +67,28 @@ export class Sequencer {
     return false;
   }
 
+  private static getElementName = (layers: Layer[], layerIndex: number, elementIndex: number) => {
+    return layers[layerIndex].elements[elementIndex].name;
+  };
+
   public static layerElementHasExclusion(
     layers: Layer[],
     layer: Layer,
-    index: number,
+    elementName: string,
     sequences: ElementSource[],
   ): boolean {
     if (!layer.exclude) {
       return false;
     }
-    sequences.forEach((sequence) => {
-      if (
-        layer.exclude[layer.elements[index].name].includes(
-          layers[sequence.layerIndex].elements[sequence.elementIndex].name,
-        )
-      ) {
-        return true;
+    let skip = false;
+    sequences.forEach((sequence: ElementSource) => {
+      const name = Sequencer.getElementName(layers, sequence.layerIndex, sequence.elementIndex);
+      console.log(name, elementName);
+      if (layer.exclude[elementName]?.includes(name)) {
+        skip = true;
       }
     });
-    return false;
+    return skip;
   }
 }
 
@@ -114,7 +114,7 @@ const chunkSubstr = (str: string, size: number) => {
 };
 
 export class ImageElementRandomizer {
-  public static Run = (seed: string, layers: Layer[], width: number, height: number): ImageElement => {
+  public static Run = (seed: string, layers: Layer[], width: number, height: number): ArtImageElement => {
     let sequences: ElementSource[] = [];
     const chunks = chunkSubstr(seed, 8); // broken to 8 sizes
     chunks.shift();
@@ -130,8 +130,8 @@ export class ImageElementRandomizer {
 
         for (var i = 0; i < elements.length; i++) {
           if (
-            Sequencer.layerElementHasCombination(layers, layer, i, sequences) ||
-            Sequencer.layerElementHasExclusion(layers, layer, i, sequences)
+            Sequencer.layerElementHasExclusion(layers, layer, elements[i].name, sequences) ||
+            Sequencer.layerElementHasCombination(layers, layer, elements[i].name, sequences)
           ) {
             continue;
           }
@@ -148,6 +148,6 @@ export class ImageElementRandomizer {
         }
       }
     });
-    return new ImageElement(sequences, width, height, layers);
+    return new ArtImageElement(sequences, width, height, layers);
   };
 }

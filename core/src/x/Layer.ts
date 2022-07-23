@@ -10,6 +10,8 @@ class Layer {
   weight: number;
 
   combination?: any;
+
+  // exclude?: { name: string; from: string[] }[];
   exclude?: any;
 
   constructor(config: LayerConfig, layerPath: string) {
@@ -40,9 +42,16 @@ class Layer {
         return element.weight;
       })
       .reduce((a, b) => a + b, 0);
-
     config.options?.combination != undefined && (this.combination = config.options.combination);
     config.options?.exclude != undefined && (this.exclude = config.options.exclude);
+    // this.exclude =
+    //   config.options?.exclude != undefined &&
+    //   this.exclude.map((item, index) => {
+    //     return {
+    //       name: item.to,
+    //       from: item.from,
+    //     };
+    //   });
   }
 }
 
