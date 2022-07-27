@@ -1,7 +1,8 @@
 import express, { Router } from 'express';
 import { imageFormatConfig, layerConfig } from '../config';
 import { CollectionAnalyticsType, ImageFormatConfig, LayerConfig } from '../utils/types';
-import { Generator } from '../x/Generator';
+import { App } from '../x/App';
+import Collection from '../x/Collection';
 
 const router: Router = express.Router();
 const allowlist = ['roboghost']; // todo: move to db
@@ -30,7 +31,7 @@ router.get(
   collectionMiddleware,
   async (request: express.Request, response: express.Response) => {
     const tokenHash = request.params.token_hash as string;
-    const app: Generator = new Generator({
+    const app: App = new App({
       configs: layerConfig,
       imageFormat: imageFormatConfig,
       basePath,
@@ -44,7 +45,7 @@ router.get(
   '/:username/generate/random',
   collectionMiddleware,
   async (request: express.Request, response: express.Response) => {
-    const app: Generator = new Generator({
+    const app: App = new App({
       configs: layerConfig,
       imageFormat: imageFormatConfig,
       basePath,
@@ -59,15 +60,17 @@ router.get(
   collectionMiddleware,
   async (request: express.Request, response: express.Response) => {
     const type: CollectionAnalyticsType = request.params.type as CollectionAnalyticsType;
-    const app: Generator = new Generator({
+    const username: string = request.params.username as string;
+    const app: App = new App({
       configs: layerConfig,
       imageFormat: imageFormatConfig,
       basePath,
     });
-    const totalSupply = 111;
-    const { tokens, data } = await app.createRandomCollection({ totalSupply: totalSupply });
-    const a = Generator.calculateRarityAttributes(tokens, data, type, totalSupply);
-    return response.status(200).send(a);
+    return response.status(200).send(
+      await app.createRandomCollection({ username }).then((collection: Collection) => {
+        collection.calculateRarityAttributes(type);
+      }),
+    );
   },
 );
 

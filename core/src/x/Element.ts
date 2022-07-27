@@ -53,7 +53,7 @@ abstract class ImageElement extends Element {
     return `0x${sha256(
       this.toAttributes()
         .map((attr) => {
-          return attr['value'];
+          return `${attr['trait_type']}-${attr['value']}`;
         })
         .join('-'),
     ).toString()}`;

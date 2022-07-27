@@ -9,50 +9,50 @@ export const layerConfig: LayerConfig[] = [
         name: 'Prism',
         weight: 10,
       },
-      // {
-      //   name: 'Future-Past',
-      //   weight: 15,
-      // },
-      // {
-      //   name: 'The-Deep',
-      //   weight: 22,
-      // },
-      // {
-      //   name: 'Firestorm',
-      //   weight: 25,
-      // },
-      // {
-      //   name: 'Galaxy',
-      //   weight: 35,
-      // },
-      // {
-      //   name: 'Cloudy',
-      //   weight: 40,
-      // },
-      // {
-      //   name: 'Carnage-Yellow',
-      //   weight: 50,
-      // },
-      // {
-      //   name: 'Carnage-Dark-Grey',
-      //   weight: 50,
-      // },
-      // {
-      //   name: 'Carnage-Blue',
-      //   weight: 50,
-      // },
-      // {
-      //   name: 'Carnage-Purple',
-      //   weight: 50,
-      // },
-      // {
-      //   name: 'Carnage-Pink',
-      //   weight: 50,
-      // },
-      // {
-      //   name: 'Carnage',
-      //   weight: 50,
-      // },
+      {
+        name: 'Future-Past',
+        weight: 15,
+      },
+      {
+        name: 'The-Deep',
+        weight: 22,
+      },
+      {
+        name: 'Firestorm',
+        weight: 25,
+      },
+      {
+        name: 'Galaxy',
+        weight: 35,
+      },
+      {
+        name: 'Cloudy',
+        weight: 40,
+      },
+      {
+        name: 'Carnage-Yellow',
+        weight: 50,
+      },
+      {
+        name: 'Carnage-Dark-Grey',
+        weight: 50,
+      },
+      {
+        name: 'Carnage-Blue',
+        weight: 50,
+      },
+      {
+        name: 'Carnage-Purple',
+        weight: 50,
+      },
+      {
+        name: 'Carnage-Pink',
+        weight: 50,
+      },
+      {
+        name: 'Carnage',
+        weight: 50,
+      },
     ],
   },
   {
@@ -63,72 +63,72 @@ export const layerConfig: LayerConfig[] = [
         name: 'Blister-Pack',
         weight: 8,
       },
-      // {
-      //   name: 'Inferno',
-      //   weight: 10,
-      // },
+      {
+        name: 'Inferno',
+        weight: 10,
+      },
       {
         name: 'INVADER',
         weight: 23,
       },
-      // {
-      //   name: 'STOP ALL HUMANS',
-      //   weight: 25,
-      // },
-      // {
-      //   name: 'LABYRINTH',
-      //   weight: 30,
-      // },
-      // {
-      //   name: 'Bubbles',
-      //   weight: 35,
-      // },
-      // {
-      //   name: 'LEVATRON',
-      //   weight: 60,
-      // },
-      // {
-      //   name: 'NONE',
-      //   weight: 325,
-      // },
+      {
+        name: 'STOP ALL HUMANS',
+        weight: 25,
+      },
+      {
+        name: 'LABYRINTH',
+        weight: 30,
+      },
+      {
+        name: 'Bubbles',
+        weight: 35,
+      },
+      {
+        name: 'LEVATRON',
+        weight: 60,
+      },
+      {
+        name: 'NONE',
+        weight: 325,
+      },
     ],
   },
   {
     name: '3. Clamps',
     metadata: true,
     traits: [
-      // {
-      //   name: 'Golden-Triple-Clamps',
-      //   weight: 10,
-      // },
+      {
+        name: 'Golden-Triple-Clamps',
+        weight: 10,
+      },
       {
         name: 'Electric-Clamps',
         weight: 15,
       },
-      // {
-      //   name: 'TRIPLE CLAMPS CHROME',
-      //   weight: 20,
-      // },
-      // {
-      //   name: 'TRIPLE CLAMPS GREY',
-      //   weight: 40,
-      // },
-      // {
-      //   name: 'TRIPLE CLAMPS',
-      //   weight: 40,
-      // },
-      // {
-      //   name: 'CHROME CLAMPS',
-      //   weight: 40,
-      // },
-      // {
-      //   name: 'GREY CLAMPS',
-      //   weight: 50,
-      // },
-      // {
-      //   name: 'OG',
-      //   weight: 50,
-      // },
+      {
+        name: 'TRIPLE CLAMPS CHROME',
+        weight: 20,
+      },
+      {
+        name: 'TRIPLE CLAMPS GREY',
+        weight: 40,
+      },
+      {
+        name: 'TRIPLE CLAMPS',
+        weight: 40,
+      },
+      {
+        name: 'CHROME CLAMPS',
+        weight: 40,
+      },
+      {
+        name: 'GREY CLAMPS',
+        weight: 50,
+      },
+      {
+        name: 'OG',
+        weight: 50,
+      },
     ],
     options: {
       type: 'EXCLUSION',
@@ -147,50 +147,50 @@ export const layerConfig: LayerConfig[] = [
     },
     metadata: true,
     traits: [
-      // {
-      //   name: 'Parasite-Pet',
-      //   weight: 10,
-      // },
+      {
+        name: 'Parasite-Pet',
+        weight: 10,
+      },
       {
         name: 'Archangel',
         weight: 15,
       },
-      // {
-      //   name: 'Goldenrods',
-      //   weight: 17,
-      // },
-      // {
-      //   name: 'Cape',
-      //   weight: 20,
-      // },
-      // {
-      //   name: 'HYDRO CABLES',
-      //   weight: 40,
-      // },
-      // {
-      //   name: 'SIRUM CABLES',
-      //   weight: 40,
-      // },
-      // {
-      //   name: 'BLOOD BANK',
-      //   weight: 40,
-      // },
-      // {
-      //   name: 'SUPPLY CABLES',
-      //   weight: 50,
-      // },
-      // {
-      //   name: 'Old Fashioned',
-      //   weight: 50,
-      // },
-      // {
-      //   name: 'Power Cords',
-      //   weight: 50,
-      // },
-      // {
-      //   name: 'NONE',
-      //   weight: 300,
-      // },
+      {
+        name: 'Goldenrods',
+        weight: 17,
+      },
+      {
+        name: 'Cape',
+        weight: 20,
+      },
+      {
+        name: 'HYDRO CABLES',
+        weight: 40,
+      },
+      {
+        name: 'SIRUM CABLES',
+        weight: 40,
+      },
+      {
+        name: 'BLOOD BANK',
+        weight: 40,
+      },
+      {
+        name: 'SUPPLY CABLES',
+        weight: 50,
+      },
+      {
+        name: 'Old Fashioned',
+        weight: 50,
+      },
+      {
+        name: 'Power Cords',
+        weight: 50,
+      },
+      {
+        name: 'NONE',
+        weight: 300,
+      },
     ],
   },
   {
@@ -734,7 +734,6 @@ export const layerConfig: LayerConfig[] = [
       exclude: {
         Laser: ['Blister-Pack', 'Chained'],
         'Rainbow-Vision': ['Blister-Pack'],
-        // LED: ['LEONIDIS', 'Doomed', 'Golden-MC'],
       },
     },
     metadata: true,
@@ -831,6 +830,9 @@ export const layerConfig: LayerConfig[] = [
       type: 'EXCLUSION',
       exclude: {
         Royals: ['Blister-Pack'],
+        LEONIDIS: ['LED', 'DONUT', 'DONUT REPLICA', 'PIZZA', 'PIZZA REPLICA', 'PIZZA REPLICA GOLD'],
+        DOOMED: ['LED', 'DONUT', 'DONUT REPLICA', 'PIZZA', 'PIZZA REPLICA', 'PIZZA REPLICA GOLD'],
+        'GOLDEN MC': ['LED', 'DONUT', 'DONUT REPLICA', 'PIZZA', 'PIZZA REPLICA', 'PIZZA REPLICA GOLD'],
       },
     },
     metadata: true,

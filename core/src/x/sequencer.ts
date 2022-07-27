@@ -2,6 +2,7 @@ import fs from 'fs';
 import { LayerConfig, ElementSource, LayerElement } from '../utils/types';
 import { Element, ArtImageElement } from './Element';
 import Layer from './Layer';
+const random = require('canvas-sketch-util/random');
 
 // Only handles the sequencing of Layers to create Elements
 // Doesn't handle metadata or other things
@@ -83,7 +84,6 @@ export class Sequencer {
     let skip = false;
     sequences.forEach((sequence: ElementSource) => {
       const name = Sequencer.getElementName(layers, sequence.layerIndex, sequence.elementIndex);
-      console.log(name, elementName);
       if (layer.exclude[elementName]?.includes(name)) {
         skip = true;
       }
@@ -116,17 +116,16 @@ const chunkSubstr = (str: string, size: number) => {
 export class ImageElementRandomizer {
   public static Run = (seed: string, layers: Layer[], width: number, height: number): ArtImageElement => {
     let sequences: ElementSource[] = [];
-    const chunks = chunkSubstr(seed, 8); // broken to 8 sizes
-    chunks.shift();
-    const r = rng(createSeed(chunks[chunks.length - 1]));
+    random.setSeed(Number(seed));
     layers.forEach((layer: Layer, index: number) => {
       const { weight, iterations, occuranceRate, elements } = layer;
       for (var k = 0; k < iterations; k++) {
-        if (r > occuranceRate) {
+        // @ts-ignore
+        if (random.value() > occuranceRate) {
           continue;
         }
-
-        let random = Math.floor(r * weight);
+        // @ts-ignore
+        let random = Math.floor(random.value() * weight);
 
         for (var i = 0; i < elements.length; i++) {
           if (

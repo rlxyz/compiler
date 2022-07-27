@@ -1,5 +1,4 @@
 import { LayerConfig, LayerElement } from '../utils/types';
-
 class Layer {
   name: string;
   elements: LayerElement[];
@@ -22,15 +21,12 @@ class Layer {
     this.name = config.name;
     this.layerPath = layerPath;
     this.elements = config.traits.map(({ name, weight }, index) => {
+      const finalName: string = Layer._toElementName(name);
       return {
         id: index,
-        name: name.replace(/.(jpg|jpeg|png|gif)$/i, ''),
-        path: `${this.layerPath}/${name
-          .toLowerCase()
-          .replace(/(\s+)/g, '-')
-          .replace(new RegExp(/\s+(.)(\w*)/, 'g'), ($1, $2, $3) => `${$2.toUpperCase() + $3}`)
-          .replace(new RegExp(/\w/), (s) => s.toUpperCase())}${'.png'}`,
-        filename: name,
+        name: finalName,
+        path: `${this.layerPath}/${finalName}${'.png'}`,
+        filename: `${finalName}${'.png'}`,
         weight: weight || 1,
       };
     });
@@ -42,17 +38,26 @@ class Layer {
         return element.weight;
       })
       .reduce((a, b) => a + b, 0);
+
+    if (config.options?.exclude) {
+      this.exclude = {};
+      Object.entries(config.options.exclude).forEach((item: [string, string[]]) => {
+        this.exclude[Layer._toElementName(item[0])] = item[1].map((elementName) => {
+          return Layer._toElementName(elementName);
+        });
+      });
+    }
+
     config.options?.combination != undefined && (this.combination = config.options.combination);
-    config.options?.exclude != undefined && (this.exclude = config.options.exclude);
-    // this.exclude =
-    //   config.options?.exclude != undefined &&
-    //   this.exclude.map((item, index) => {
-    //     return {
-    //       name: item.to,
-    //       from: item.from,
-    //     };
-    //   });
   }
+
+  private static _toElementName = (name: string): string => {
+    return name
+      .toLowerCase()
+      .replace(/(\s+)/g, '-')
+      .replace(new RegExp(/\s+(.)(\w*)/, 'g'), ($1, $2, $3) => `${$2.toUpperCase() + $3}`)
+      .replace(new RegExp(/\w/), (s) => s.toUpperCase());
+  };
 }
 
 export default Layer;

@@ -1,4 +1,4 @@
-import { Generator } from './x/Generator';
+import { App } from './x/App';
 import {
   LayerElement,
   ElementSource,
@@ -13,11 +13,10 @@ const basePath = process.cwd();
 
 const imageFormatConfig: ImageFormatConfig = { width: 1500, height: 1500, smoothing: false };
 
-const app: Generator = new Generator({
+const app: App = new App({
   configs: layerConfig,
   imageFormat: imageFormatConfig,
   basePath,
 });
 
-app.createRandomCollection({ totalSupply: 100, savePath: `${basePath}/images` });
-// app.createElementFromHash('0xhihihihihihihihihihihihihihi');
+app.createRandomCollection({ username: 'RoboGhost', savePath: `${basePath}/images` });
