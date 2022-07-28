@@ -1,12 +1,25 @@
+import { S3StorageService } from 'libs/storage';
 import { CollectionAnalyticsType } from './types';
-
+import { Element } from './Element';
 class Collection {
+  elements: Element[];
   username: string;
   tokens: any;
   data: any;
   totalSupply: number;
 
-  constructor({ tokens, data, totalSupply }: { tokens: any; data: any; totalSupply: number }) {
+  constructor({
+    elements,
+    tokens,
+    data,
+    totalSupply,
+  }: {
+    elements: Element[];
+    tokens: any;
+    data: any;
+    totalSupply: number;
+  }) {
+    this.elements = elements;
     this.tokens = tokens;
     this.data = data;
     this.totalSupply = totalSupply;
@@ -143,6 +156,37 @@ class Collection {
         return traits;
     }
   };
+
+  toLocal = async (start: number = 0, end: number = this.totalSupply): Promise<boolean> => {
+    for (let i = start; i < end; i++) {
+      await this.elements[i].toFile(`${process.cwd()}/images/${i}.png`);
+    }
+    return true;
+  };
+
+  toCloud = async (start: number = 0, end: number = this.totalSupply): Promise<boolean> => {
+    const storage = new S3StorageService({
+      endpoint: process.env.S3_ENDPOINT,
+      region: process.env.S3_REGION,
+      credentials: {
+        accessKeyId: process.env.S3_API_KEY,
+        secretAccessKey: process.env.S3_SECRET_KEY,
+      },
+    });
+    for (let i = start; i < end; i++) {
+      storage.Put({
+        tokenId: i,
+        tokenHash: this.elements[i].toHex(),
+        imageBuffer: await this.elements[i].toBuffer(),
+        attributes: this.elements[i].toAttributes(),
+        fileName: `${i}`,
+      });
+    }
+    return true;
+  };
 }
 
 export default Collection;
+function save() {
+  throw new Error('Function not implemented.');
+}

@@ -55,7 +55,10 @@ router.get(
     const username: string = request.params.username as string;
     app
       .createSequencer({ username, basePath: process.cwd() })
-      .createCollection()
+      .createCollection({
+        start: 0,
+        end: 1111,
+      })
       .then((collection: Collection) => {
         return response.status(200).send(collection.calculateRarityAttributes(type));
       })
@@ -64,5 +67,27 @@ router.get(
       });
   },
 );
+
+router.get('/:username/save', collectionMiddleware, async (request: express.Request, response: express.Response) => {
+  const type: CollectionAnalyticsType = request.params.type as CollectionAnalyticsType;
+  const username: string = request.params.username as string;
+  const start: number = request.query.start as unknown as number;
+  const end: number = request.query.start as unknown as number;
+  app
+    .createSequencer({ username, basePath: process.cwd() })
+    .createCollection({
+      start,
+      end,
+    })
+    .then((collection: Collection) => {
+      if (collection.toCloud(start, end)) {
+        return response.status(200).send(collection.calculateRarityAttributes(type)).end();
+      }
+      return response.status(400).end();
+    })
+    .catch(() => {
+      return response.status(400).end();
+    });
+});
 
 export default router;

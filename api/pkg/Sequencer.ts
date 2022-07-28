@@ -108,41 +108,34 @@ export class Sequencer {
     return skip;
   }
 
-  createCollection = async (): Promise<Collection> => {
+  // optimize for speed & space. need to be fast af.
+  createCollection = async (opts: { start: number; end: number }): Promise<Collection> => {
+    const { start, end } = opts;
     const allHash = new Set();
     const tokens: { attributes: any; token_hash: string }[] = [];
+    const elements: Element[] = [];
     const data: any[] = [];
-    const savePath = this.body.savePath;
-
-    // should pull from db
-    const totalSupply = 1111;
-
-    const files =
-      savePath !== '' &&
-      fs
-        .readdirSync(`${savePath}`)
-        .filter((file) => fs.lstatSync(path.join(`${savePath}`, file)).isFile())
-        .map((file) => ({ file, mtime: fs.lstatSync(path.join(`${savePath}`, file)).mtime }))
-        .sort((a, b) => b.mtime.getTime() - a.mtime.getTime());
-
-    // for mac: sometimes ds_store can cause issues with Number(files[0].file.slice(0, -4))
-    // @ts-ignore
-    let startPoint = files.length > 0 ? Number(files[0].file.slice(0, -4)) + 1 : 0;
-    for (var i = startPoint; i < totalSupply + startPoint; ) {
+    for (var i = start; i < end; ) {
       const element: Element = await this.createElement();
-      savePath !== '' && (await element.toFile(`${savePath}/${i}.png`));
       const hash: string = element.toHex();
       const attributes: any[] = element.toAttributes();
-      if (!allHash.has(hash)) {
-        i++;
-        allHash.add(hash);
-        tokens.push({ attributes: attributes, token_hash: hash });
+      !allHash.has(hash) && i++,
+        allHash.add(hash),
+        elements.push(element), // always sequential in token id
+        tokens.push({ attributes: attributes, token_hash: hash }),
         data.push(attributes);
-      }
     }
-    return new Collection({ tokens, data, totalSupply });
+    return new Collection({ elements, tokens, data, totalSupply: end - start });
   };
 }
+
+const calculateArtImageElementsStored = (collection: Collection) => {
+  const elementsStored = [];
+  for (let i = 0; i < 20; i++) {
+    elementsStored.push(Math.pow(2, i));
+  }
+  return elementsStored;
+};
 
 export class ImageElementRandomizer {
   public static Run = (seed: string, layers: Layer[], width: number, height: number): ArtImageElement => {
