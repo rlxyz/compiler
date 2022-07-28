@@ -1,7 +1,7 @@
 // Imports
 import express from 'express';
 import cors from 'cors';
-import collectionRouter from './routes/collections';
+import collectionRouter from './routes/collection';
 
 // Application
 const app = express();

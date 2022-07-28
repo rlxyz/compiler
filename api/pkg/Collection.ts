@@ -187,6 +187,3 @@ class Collection {
 }
 
 export default Collection;
-function save() {
-  throw new Error('Function not implemented.');
-}
