@@ -1,0 +1,2 @@
+CREATE DATABASE compiler_development;
+CREATE DATABASE compiler_production;

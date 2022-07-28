@@ -1,0 +1,33 @@
+{
+  "compilerOptions": {
+    // "strictNullChecks": true,
+    "moduleResolution": "node",
+    "noFallthroughCasesInSwitch": true,
+    "outDir": "./dist",
+    "sourceMap": true,
+    "incremental": true,
+    "tsBuildInfoFile": "./dist/.tsbuildinfo",
+    "noUnusedLocals": false,
+    "baseUrl": "./",
+    "rootDir": "./",
+    "types": [],
+    "target": "es6",    
+    "module": "commonjs",
+    "lib": [
+      "es6"
+    ],
+    "allowJs": false,
+    "noImplicitAny": true,
+    "esModuleInterop": true,
+    "resolveJsonModule": true,
+    "declaration": true,
+  },
+  "include": ["**/*.ts"],
+  "exclude": [
+    "node_modules",
+    "./node_modules",
+    "./node_modules/*",
+    "./node_modules/@types/express/index.d.ts",
+    "./dist"
+  ]
+}
