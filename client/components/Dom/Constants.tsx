@@ -1,6 +1,6 @@
 export default {
   CONTENT: {
-    TITLE: 'Reflections',
+    TITLE: 'Athens',
     SUBTITLE: {
       HEADING: 'A reflective journey',
       EXTENSIONS: [
