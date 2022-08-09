@@ -32,6 +32,7 @@
     "@cloudinary/url-gen": "^1.8.0",
     "@juggle/resize-observer": "^3.3.1",
     "@lottiefiles/react-lottie-player": "^3.4.2",
+    "@prisma/client": "4.1.1",
     "@react-three/cannon": "4.0.1",
     "@react-three/drei": "^8.18.10",
     "@react-three/fiber": "^7.0.26",
@@ -54,7 +55,7 @@
     "three": "^0.138.3",
     "typewriter-effect": "^2.18.2",
     "uuid": "^8.3.2",
-    "zustand": "^3.6.6"
+    "zustand": "^4.0.0"
   },
   "devDependencies": {
     "@next/bundle-analyzer": "^12.0.2",
@@ -67,6 +68,7 @@
     "next-offline": "^5.0.5",
     "postcss": "^8.3.9",
     "prettier": "^2.6.1",
+    "prisma": "4.1.1",
     "raw-loader": "^4.0.2",
     "sass": "^1.49.9",
     "stats.js": "^0.17.0",

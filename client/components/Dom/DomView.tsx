@@ -3,6 +3,12 @@ import { useState } from 'react'
 import { Cloudinary } from '@cloudinary/url-gen'
 import { AdvancedImage } from '@cloudinary/react'
 
+// current total weight -- sumation of all weights
+export type Trait = {
+  weight: number
+  rarityPercentage: number
+}
+
 export type LayerConfig = {
   name: string
   traits: {
@@ -27,6 +33,13 @@ export type LayerConfig = {
   }[]
   metadata?: boolean
 }
+
+const layer: Map<string, Map<string, Trait>> = new Map<
+  string,
+  Map<string, Trait>
+>()
+
+const layerRarityTotal: Map<string, number> = new Map<string, number>()
 
 export const layerConfig: LayerConfig[] = [
   {
@@ -978,17 +991,47 @@ export const layerConfig: LayerConfig[] = [
   },
 ]
 
-const DomView = () => {
+const formatLayerName = (name: string) => {
+  return name
+    .toLowerCase()
+    .replace(/(\s+)/g, '-')
+    .replace(
+      new RegExp(/\s+(.)(\w*)/, 'g'),
+      ($1, $2, $3) => `${$2.toUpperCase() + $3}`
+    )
+    .replace(new RegExp(/\w/), (s) => s.toUpperCase())
+}
+
+const DomView = ({ collectionSize, collectionId }) => {
   const cld = new Cloudinary({
     cloud: {
       cloudName: 'rlxyz',
     },
   })
 
+  layerConfig.forEach((l) => {
+    const total = l.traits.reduce(
+      (previousValue, currentValue) => previousValue + currentValue.weight,
+      0
+    )
+
+    const trait = new Map<string, Trait>()
+
+    l.traits.forEach((t) => {
+      trait.set(t.name, {
+        weight: t.weight,
+        rarityPercentage: t.weight / total,
+      })
+    })
+
+    layer.set(l.name, trait)
+    layerRarityTotal.set(l.name, total)
+  })
+
   const [currentLayerView, setCurrentLayerView] =
     useState<string>('1. Background')
   const [currentLayerViewIndex, setCurrentLayerViewIndex] = useState<number>(0)
-  const [currentSectionViewIndex, setSectionViewIndex] = useState<number>(1)
+  const [currentSectionViewIndex, setSectionViewIndex] = useState<number>(0)
 
   return (
     <>
@@ -1087,29 +1130,13 @@ const DomView = () => {
                           <div key={index}>
                             <AdvancedImage
                               cldImg={cld.image(
-                                `1/layers/${currentLayerView}/${trait.name
-                                  .toLowerCase()
-                                  .replace(/(\s+)/g, '-')
-                                  .replace(
-                                    new RegExp(/\s+(.)(\w*)/, 'g'),
-                                    ($1, $2, $3) => `${$2.toUpperCase() + $3}`
-                                  )
-                                  .replace(new RegExp(/\w/), (s) =>
-                                    s.toUpperCase()
-                                  )}.png`
+                                `1/layers/${currentLayerView}/${formatLayerName(
+                                  trait.name
+                                )}.png`
                               )}
                             />
                             <span className='text-xs'>
-                              {trait.name
-                                .toLowerCase()
-                                .replace(/(\s+)/g, '-')
-                                .replace(
-                                  new RegExp(/\s+(.)(\w*)/, 'g'),
-                                  ($1, $2, $3) => `${$2.toUpperCase() + $3}`
-                                )
-                                .replace(new RegExp(/\w/), (s) =>
-                                  s.toUpperCase()
-                                )}
+                              {formatLayerName(trait.name)}
                             </span>
                           </div>
                         )
@@ -1133,35 +1160,45 @@ const DomView = () => {
                             <AdvancedImage
                               className='h-full w-[100px]'
                               cldImg={cld.image(
-                                `1/layers/${currentLayerView}/${trait.name
-                                  .toLowerCase()
-                                  .replace(/(\s+)/g, '-')
-                                  .replace(
-                                    new RegExp(/\s+(.)(\w*)/, 'g'),
-                                    ($1, $2, $3) => `${$2.toUpperCase() + $3}`
-                                  )
-                                  .replace(new RegExp(/\w/), (s) =>
-                                    s.toUpperCase()
-                                  )}.png`
+                                `${collectionId}/layers/${currentLayerView}/${formatLayerName(
+                                  trait.name
+                                )}.png`
                               )}
                             />
                             <span className='text-xs'>
-                              {trait.name
-                                .toLowerCase()
-                                .replace(/(\s+)/g, '-')
-                                .replace(
-                                  new RegExp(/\s+(.)(\w*)/, 'g'),
-                                  ($1, $2, $3) => `${$2.toUpperCase() + $3}`
-                                )
-                                .replace(new RegExp(/\w/), (s) =>
-                                  s.toUpperCase()
-                                )}
+                              {formatLayerName(trait.name)}
                             </span>
                             <div className='w-[100px]'>
-                              <input placeholder='365'></input>
-                              out of 5000
+                              <input
+                                placeholder={(
+                                  (collectionSize * trait.weight) /
+                                  layerConfig[
+                                    currentLayerViewIndex
+                                  ].traits.reduce(
+                                    (previousValue, currentValue) =>
+                                      previousValue + currentValue.weight,
+                                    0
+                                  )
+                                )
+                                  .toFixed(0)
+                                  .toString()}
+                              />
+                              out of {collectionSize}
                             </div>
-                            <div>{(1 / 13).toFixed(2)}%</div>
+                            <div>
+                              {(
+                                (trait.weight /
+                                  layerConfig[
+                                    currentLayerViewIndex
+                                  ].traits.reduce(
+                                    (previousValue, currentValue) =>
+                                      previousValue + currentValue.weight,
+                                    0
+                                  )) *
+                                100
+                              ).toFixed(2)}
+                              %
+                            </div>
                           </div>
                         )
                       }

@@ -16,7 +16,7 @@ const Page = () => {
     <>
       <Suspense fallback={`loading`}>
         <BasicDomLayout>
-          <DomView />
+          <DomView collectionId={1} collectionSize={5555} />
         </BasicDomLayout>
       </Suspense>
     </>

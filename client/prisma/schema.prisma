@@ -1,0 +1,62 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("NEXT_PUBLIC_DATABASE_URL")
+}
+
+model TraitElement {
+  id           String       @id @default(cuid())
+  name         String
+  weight       Int
+  collection   Collection   @relation(fields: [collectionId], references: [id])
+  collectionId String
+  layer        LayerElement @relation(fields: [layerId], references: [id])
+  layerId      String
+  ArtElement   ArtElement?  @relation(fields: [artElementId], references: [id])
+  artElementId String?
+}
+
+model ArtElement {
+  id           String         @id @default(cuid())
+  name         String
+  weight       Int
+  collection   Collection     @relation(fields: [collectionId], references: [id])
+  collectionId String
+  traits       TraitElement[]
+}
+
+model LayerElement {
+  id           String         @id @default(cuid())
+  name         String
+  weight       Int
+  collection   Collection     @relation(fields: [collectionId], references: [id])
+  collectionId String
+  links        TraitElement[]
+}
+
+model Collection {
+  id           String         @id @default(cuid())
+  name         String
+  totalSupply  Int
+  layers       LayerElement[]
+  art          ArtElement[]
+  TraitElement TraitElement[]
+  owner        User           @relation(fields: [ownerId], references: [id])
+  ownerId      String
+}
+
+model User {
+  id          String       @id @default(cuid())
+  eth_address String?      @unique
+  createdAt   DateTime     @default(now()) @map(name: "created_at")
+  updatedAt   DateTime     @updatedAt @map(name: "updated_at")
+  Collection  Collection[]
+
+  @@map(name: "users")
+}
