@@ -1,112 +1,172 @@
-[![NPM Package](https://img.shields.io/npm/v/@rlxyz/compiler.svg)](https://www.npmjs.org/package/@rlxyz/compiler)
+# REFLECTIONS
 
-**A library based on Boolean Logic for Generative Art compilation**
+A first-of-its-kind generative photography NFT project that harnesses the serendipity of on-chain mechanics to compose 1,111 unique one-of-a-kind NFTs.
 
-- Allows creation of generative art images based on layers
-- Handles various boolean logic creation
-- Outputs metadata files
-- Calculates rarity of each layer & trait
+## Project Architecture
 
-## Overview
+This project consists of three main components:
 
-### Installation 🛠️
+1. **Core Library (`@rlxyz/compiler`)**
+   - Generative art compilation engine
+   - Boolean logic handling for trait combinations
+   - Metadata generation and rarity calculation
 
-```console
-yarn add @rlxyz/compiler
+2. **Client Application (`@rhapsodylabs/project-reflection-client`)**
+   - Next.js-based frontend
+   - React Three Fiber for 3D visualizations
+   - Responsive design with Tailwind CSS
+
+3. **Server (`@rlxyz/reflection-server`)**
+   - Express-based API
+   - Storage service integration (S3/Pinata)
+   - Collection generation and management
+
+## Technical Stack
+
+### Frontend
+- Next.js (React framework)
+- React Three Fiber (3D rendering)
+- Tailwind CSS (styling)
+- Framer Motion (animations)
+
+### Backend
+- Express.js (API server)
+- Node.js (runtime)
+- Canvas API (image generation)
+
+### Storage
+- AWS S3 / Digital Ocean Spaces
+- IPFS via Pinata
+
+### Development
+- TypeScript
+- Yarn package manager
+- GitHub Actions (CI/CD)
+
+## Key Features
+
+- **Generative Photography**: Combines traditional photography with generative algorithms
+- **On-chain Mechanics**: Uses blockchain randomness for unique compositions
+- **Layered Composition**: Multi-layered image generation with weighted traits
+- **Rarity System**: Sophisticated rarity calculation for each trait and NFT
+- **Metadata Generation**: Automatic creation of NFT metadata
+- **Cloud Storage Integration**: Flexible storage options (S3/IPFS)
+
+## Getting Started
+
+### Prerequisites
+
+- Node.js 16.16.0 (use nvm for version management)
+- Yarn package manager
+
+### Installation
+
+1. Clone the repository:
+```bash
+git clone https://github.com/rhapsodylabs/project-REFLECTION.git
+cd project-REFLECTION
 ```
 
-Once installed, you can use the generative compiler in the library by following these steps.
-
-## Usage
-
-### Step 1: Create folder in root of project called `layers` and add layers.
-
-```console
-root
-  - src
-  - layers
-    - layer_1
-      - layer_1_1.png
-      - layer_1_2.png
-    - layer_2
-      - layer_2_1.png
-      - layer_2_2.png
-  - package.json
-  - ...
+2. Set up environment variables:
+```bash
+# Copy example environment files
+cp client/.envrc.example client/.envrc
+cp server/.envrc.example server/.envrc
+# Edit the files with your configuration
 ```
 
-### Step 2: Set these variables.
+3. Install dependencies for each component:
+```bash
+# Core library
+cd core
+yarn install
 
-```javascript
-const imageFormatConfig: ImageFormatConfig = {
-    width: 500,
-    height: 500,
-    smoothing: false,
-}
+# Client
+cd ../client
+yarn install
+
+# Server
+cd ../server
+yarn install
 ```
 
-### Step 3: Create these folders at root
+## Development
 
-```console
-root
-  - layers
-  - images
-  - metadata
-  - package.json
-  - ...
+### Core Library
+
+```bash
+cd core
+yarn build        # Build the library
+yarn dev:gen      # Generate test images
+yarn dev:api      # Run development API
 ```
 
-As of `v1.0.1`, user must create `layers`, `images` and `metadata` folder.
+### Client
 
-### Step 4: Layer Config based on `layers` folder
-
-```javascript
-const layerConfig: LayerConfig[] = [
-  {
-    name: 'layer_1',
-    traits: [
-      { name: 'layer_1_1.png', weight: 50 },
-      { name: 'layer_1_2.png', weight: 100 },
-    ],
-  },
-  {
-    name: 'layer_2',
-    traits: [
-      { name: 'layer_2_1.png', weight: 70 },
-      { name: 'layer_2_2.png', weight: 30 },
-    ],
-  },
-];
+```bash
+cd client
+yarn dev          # Start Next.js development server
+yarn build        # Build for production
+yarn start        # Start production server
 ```
 
-### Step 5: To generate images, use this block of code.
+### Server
 
-```javascript
-import { Layers } from '@rlxyz/compiler';
-import { imageFormatConfig, layerConfig } from './config';
-
-const basePath = process.cwd();
-
-const createImage = () => {
-  const layers = new Layers(layerConfig, imageFormatConfig, basePath, true);
-  layers.createRandomImages();
-};
-
-(() => {
-  createImage();
-})();
+```bash
+cd server
+yarn dev:api      # Start API development server
+yarn dev:watcher  # Start blockchain watcher
 ```
 
-## Security
+## Deployment
 
-This project is maintained by [RLXYZ](https://twitter.com/rlxyz_eth).
+The project is designed to be deployed on Vercel (client) and a Node.js hosting service (server).
 
-Critical bug fixes will be backported to past major releases.
+```bash
+# Deploy client to Vercel
+cd client
+yarn build
+vercel deploy
 
-## Contribute
+# Deploy server
+cd server
+yarn build
+yarn start:api
+```
 
-RLXYZ Compiler exists thanks to its contributors. There are many ways you can participate and help build high quality software. Check out the [contribution guide](CONTRIBUTING.md)!
+## Project Structure
 
-## License
+- `/core/` - Generative art compiler library
+  - `/src/` - Source code
+    - `/utils/` - Utility functions and types
+    - `/x/` - Core components (App, Collection, etc.)
+  - `/build/` - Compiled output
 
-RLXYZ Compiler is released under the [MIT License](LICENSE).
+- `/client/` - Next.js frontend
+  - `/components/` - React components
+    - `/Dom/` - DOM-based components
+  - `/pages/` - Next.js pages
+  - `/styles/` - CSS and styling
+  - `/utils/` - Utility functions
+
+- `/server/` - Express backend
+  - `/src/` - Source code
+    - `/storage/` - Storage service implementations
+  - `/build/` - Compiled output
+
+## Architecture Details
+
+### Image Generation Process
+
+1. Layer configurations define the possible traits and their weights
+2. The compiler selects traits based on weighted randomness and boolean logic
+3. Canvas API composes the final image from selected layers
+4. Metadata is generated with trait information and rarity scores
+5. Images and metadata are stored in S3/IPFS
+
+### Storage Strategy
+
+The system supports multiple storage backends:
+- S3/Digital Ocean Spaces for development and high-performance serving
+- IPFS via Pinata for decentralized, permanent storage
+
