@@ -1,6 +1,6 @@
 export const environs = {
   collectionSize: Number(process.env.COLLECTION_SIZE || 1111),
-  storageUrl: process.env.STORAGE_URL || "https://ipfs.rhapsodylabs.xyz/ipfs/",
+  storageUrl: process.env.STORAGE_URL || "https://ipfs.rlxyz.xyz/ipfs/",
   description: process.env.COLLECTION_DESCRIPTION || "",
   externalUrl:
     process.env.COLLECTION_EXTERNAL_URL || "https://reflections.dreamlab.art/",

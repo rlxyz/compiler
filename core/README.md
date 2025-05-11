@@ -11,7 +11,7 @@ This project consists of three main components:
    - Boolean logic handling for trait combinations
    - Metadata generation and rarity calculation
 
-2. **Client Application (`@rhapsodylabs/project-reflection-client`)**
+2. **Client Application (`@rlxyz/project-reflection-client`)**
    - Next.js-based frontend
    - React Three Fiber for 3D visualizations
    - Responsive design with Tailwind CSS
@@ -63,7 +63,7 @@ This project consists of three main components:
 
 1. Clone the repository:
 ```bash
-git clone https://github.com/rhapsodylabs/project-REFLECTION.git
+git clone https://github.com/rlxyz/project-REFLECTION.git
 cd project-REFLECTION
 ```
 

@@ -7,8 +7,8 @@
   "author": "",
   "contributors": [
     {
-      "name": "Jeevan Pillay <jeevan.rhapsodylabs.eth>",
-      "email": "jeevan@rhapsodylabs.xyz",
+      "name": "Jeevan Pillay <jeevan.rlxyz.eth>",
+      "email": "jeevan@rlxyz.xyz",
       "url": "https://twitter.com/jeevanpillay"
     }
   ],
@@ -19,7 +19,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/rhapsodylabs/project-REFLECTION-core.git"
+    "url": "git+https://github.com/rlxyz/project-REFLECTION-core.git"
   },
   "scripts": {
     "lint": "eslint . --ext .ts",

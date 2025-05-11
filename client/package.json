@@ -1,15 +1,15 @@
 {
-  "name": "@rhapsodylabs/project-reflection-client",
+  "name": "@rlxyz/project-reflection-client",
   "common": {
-    "ethereum": "reflection.rhapsodylabs.eth"
+    "ethereum": "reflection.rlxyz.eth"
   },
   "version": "0.1.0",
   "description": "A generative photography NFT project by Jacob Riglin x DreamLab",
   "author": "Rhapsody Labs",
   "contributors": [
     {
-      "name": "Jeevan Pillay <jeevan.rhapsodylabs.eth>",
-      "email": "jeevan@rhapsodylabs.xyz",
+      "name": "Jeevan Pillay <jeevan.rlxyz.eth>",
+      "email": "jeevan@rlxyz.xyz",
       "url": "https://twitter.com/jeevanpillay"
     },
     {
